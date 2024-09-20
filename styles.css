@@ -48,6 +48,17 @@ body {
   transform: translateY(-2px);
 }
 
+/* 헤더 제목을 좌측에 고정하고 나머지 요소들을 우측으로 밀어내기 */
+#header-title {
+  flex: 1;
+}
+
+/* search-logout을 플렉스 컨테이너로 설정하여 내부 요소들을 가로로 배치 */
+#search-logout {
+  display: flex;
+  align-items: center;
+}
+
 /* Login Screen */
 #login-screen {
   display: flex;
@@ -217,7 +228,6 @@ header h1:hover {
   border-radius: 0px;
   font-size: 16px;
   transition: border-color 0.3s, box-shadow 0.3s;
-  margin-left: 650px;
 }
 
 #search-bar input:focus {
