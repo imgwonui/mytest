@@ -16,8 +16,20 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
     />
+    <!-- FullCalendar CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css"
+      rel="stylesheet"
+    />
     <!-- CSS 파일 연결 -->
     <link rel="stylesheet" href="styles.css" />
+
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- JavaScript 파일 연결 -->
+    <script src="script.js" defer></script>
   </head>
   <body>
     <!-- Login Screen -->
@@ -77,14 +89,17 @@
           <div id="welcome" class="section active">
             <h2>(주)월급날 WorkHub에 오신 것을 환영합니다.</h2>
             <h3>Workhub에 오신 것을 진심으로 환영합니다.</h3>
-            <div>
-              업무에 필요한 정보를 서로 쉽게 공유하고자 만들어진 페이지입니다.
+            <div class="welcome-content">
+              <div class="welcome-text">
+                <p>
+                  업무에 필요한 정보를 서로 쉽게 공유하고자 만들어진
+                  페이지입니다.
+                </p>
+              </div>
+              <div class="welcome-calendar">
+                <div id="calendar"></div>
+              </div>
             </div>
-            <img
-              src="https://media.marketrealist.com/brand-img/1DZ6opU6M/0x0/gusto-happy-payday-1632749976515.jpg"
-              alt="Welcome Image"
-              style="margin-top: 20px"
-            />
           </div>
 
           <!-- Sections -->
@@ -192,9 +207,13 @@
           <option value="tax-search">세법</option>
           <option value="review-tax-search">검토법</option>
           <option value="faq">지식 공유 FAQ</option>
+          <option value="leave-applications">휴가신청</option>
+          <!-- 추가: 휴가신청 게시판 선택 옵션 -->
         </select>
         <input type="text" id="post-title" placeholder="제목" />
         <textarea id="post-content" placeholder="내용"></textarea>
+        <!-- 이미지 업로드 필드 추가 -->
+        <input type="file" id="post-image" accept="image/*" />
         <button id="submit-post" type="button">게시</button>
       </div>
     </div>
@@ -240,7 +259,7 @@
       <div class="modal-content">
         <button id="close-board-search-modal" type="button">&times;</button>
         <h2 class="board-search-title">게시판 키워드 검색</h2>
-        <!-- 수정된 부분: 검색 입력과 버튼을 감싸는 컨테이너 추가 -->
+        <!-- 검색 입력과 버튼을 감싸는 컨테이너 추가 -->
         <div class="search-controls">
           <input
             type="text"
@@ -317,8 +336,5 @@
         </button>
       </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="script.js"></script>
   </body>
 </html>

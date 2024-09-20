@@ -33,6 +33,7 @@ document.getElementById("login-button").addEventListener("click", function () {
   }
   document.getElementById("password-input").value = "";
 });
+
 // Allow Enter key to submit
 document
   .getElementById("password-input")
@@ -51,6 +52,8 @@ function showMainContent() {
   if (userRole === "admin" || userRole === "user") {
     document.getElementById("write-post-button").style.display = "flex";
   }
+  // 로그아웃 버튼 표시
+  document.getElementById("logout-button").style.display = "block";
   // Initialize Leave Applications
   initializeLeaveApplications();
 }
@@ -113,22 +116,18 @@ function renderPosts(section) {
   } else {
     emptyMessage.style.display = "none";
   }
-
   // Sort posts by timestamp descending
   const sortedPosts = postsData[section].sort(
     (a, b) => b.timestamp - a.timestamp
   );
 
-  // Calculate total pages
   const totalPages = Math.ceil(sortedPosts.length / POSTS_PER_PAGE);
   const currentPage = paginationData[section];
 
-  // Get posts for current page
   const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
   const endIndex = startIndex + POSTS_PER_PAGE;
   const postsToDisplay = sortedPosts.slice(startIndex, endIndex);
 
-  // Render posts
   postsToDisplay.forEach((post, index) => {
     const actualIndex = startIndex + index;
     const postDiv = document.createElement("div");
@@ -137,7 +136,6 @@ function renderPosts(section) {
     const postTitleDiv = document.createElement("div");
     postTitleDiv.className = "post-title";
 
-    // 글번호
     const postNumber = document.createElement("span");
     postNumber.className = "post-number";
     postNumber.textContent = `#${postsData[section].length - actualIndex}`;
@@ -154,6 +152,15 @@ function renderPosts(section) {
     postDetails.className = "post-details";
     postDetails.textContent = post.date;
     postTitleDiv.appendChild(postDetails);
+
+    // 이미지 아이콘 표시 (이미지 존재 시)
+    if (post.image) {
+      const imageIcon = document.createElement("i");
+      imageIcon.className = "fas fa-image";
+      imageIcon.title = "이미지 포함 게시글";
+      imageIcon.style.marginLeft = "10px";
+      postTitleDiv.appendChild(imageIcon);
+    }
 
     // 액션 버튼
     if (userRole === "admin" && section !== "leave-applications") {
@@ -221,7 +228,7 @@ function renderPosts(section) {
     postsContainer.appendChild(postDiv);
   });
 
-  // Render Pagination if needed
+  // Pagination 렌더링
   if (totalPages > 1) {
     for (let i = 1; i <= totalPages; i++) {
       const pageButton = document.createElement("button");
@@ -236,7 +243,6 @@ function renderPosts(section) {
       paginationContainer.appendChild(pageButton);
     }
 
-    // Add '>' button for next page if not on last page
     if (currentPage < totalPages) {
       const nextButton = document.createElement("button");
       nextButton.textContent = ">";
@@ -248,6 +254,94 @@ function renderPosts(section) {
     }
   }
 }
+
+// 게시글 작성 시 이미지 처리
+submitPostButton.addEventListener("click", function () {
+  const sectionSelect = document.getElementById("post-section");
+  const sectionId = sectionSelect.value;
+  const title = document.getElementById("post-title").value.trim();
+  const content = document.getElementById("post-content").value.trim();
+  const imageInput = document.getElementById("post-image");
+  const imageFile = imageInput.files[0];
+
+  if (sectionId === "") {
+    alert("게시판을 선택해주세요.");
+    return;
+  }
+  if (title === "" || content === "") {
+    alert("제목과 내용을 모두 입력해주세요.");
+    return;
+  }
+
+  const now = new Date();
+  const formattedDate = `${now.getFullYear()}-${String(
+    now.getMonth() + 1
+  ).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(
+    now.getHours()
+  ).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+
+  // 이미지가 있는지 확인
+  if (imageFile) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const imageData = e.target.result; // base64 데이터
+
+      if (currentEdit.section !== null && currentEdit.index !== null) {
+        // 수정 모드
+        const post = postsData[currentEdit.section][currentEdit.index];
+        post.title = title;
+        post.content = content;
+        post.date = formattedDate;
+        post.image = imageData; // 이미지 업데이트
+        alert("게시글이 수정되었습니다.");
+        currentEdit.section = null;
+        currentEdit.index = null;
+      } else {
+        // 작성 모드
+        const post = {
+          title: title,
+          content: content,
+          timestamp: Date.now(),
+          date: formattedDate,
+          comments: [],
+          image: imageData, // 이미지 추가
+        };
+        postsData[sectionId].push(post);
+      }
+
+      writePostModal.style.display = "none";
+      clearWritePostModal();
+      showSection(sectionId);
+    };
+    reader.readAsDataURL(imageFile);
+  } else {
+    // 이미지 없을 경우
+    if (currentEdit.section !== null && currentEdit.index !== null) {
+      // 수정 모드
+      const post = postsData[currentEdit.section][currentEdit.index];
+      post.title = title;
+      post.content = content;
+      post.date = formattedDate;
+      alert("게시글이 수정되었습니다.");
+      currentEdit.section = null;
+      currentEdit.index = null;
+    } else {
+      // 작성 모드
+      const post = {
+        title: title,
+        content: content,
+        timestamp: Date.now(),
+        date: formattedDate,
+        comments: [],
+      };
+      postsData[sectionId].push(post);
+    }
+
+    writePostModal.style.display = "none";
+    clearWritePostModal();
+    showSection(sectionId);
+  }
+});
 
 function showSection(sectionId) {
   // 모든 섹션 숨기기
@@ -301,18 +395,46 @@ function showWelcome() {
   const welcomeSection = document.getElementById("welcome");
   if (welcomeSection) {
     welcomeSection.classList.add("active");
+    // Initialize and render the calendar if not already done
+    if (!welcomeSection.dataset.calendarInitialized) {
+      const calendarEl = document.getElementById("calendar");
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: "dayGridMonth",
+        height: "auto",
+        headerToolbar: {
+          left: "prev,next today",
+          center: "title",
+          right: "dayGridMonth,timeGridWeek,timeGridDay",
+        },
+        events: [
+          // 기본 이벤트 추가 (필요에 따라 수정)
+          {
+            title: "쉬고싶다",
+            start: "2024-10-10",
+            end: "2024-10-12",
+          },
+          {
+            title: "걍 쉬는 날",
+            start: "2024-10-15",
+          },
+          // 추가 이벤트는 여기에...
+        ],
+      });
+      calendar.render();
+      welcomeSection.dataset.calendarInitialized = "true";
+    }
   }
   // 글쓰기 버튼 숨기기
   document.getElementById("write-post-button").style.display = "none";
 }
 
 // Write Post Button Handling
-const writePostButton = document.getElementById("write-post-button");
+const writePostButtonElement = document.getElementById("write-post-button");
 const writePostModal = document.getElementById("write-post-modal");
 const closeWritePost = document.getElementById("close-write-post");
 const submitPostButton = document.getElementById("submit-post");
 
-writePostButton.addEventListener("click", function () {
+writePostButtonElement.addEventListener("click", function () {
   writePostModal.style.display = "flex";
   document.getElementById("modal-title").textContent =
     userRole === "admin" ? "게시글 작성" : "게시글 작성 (FAQ만 가능)";
@@ -321,6 +443,7 @@ writePostButton.addEventListener("click", function () {
   document.getElementById("post-section").disabled = userRole !== "admin";
   document.getElementById("post-title").value = "";
   document.getElementById("post-content").value = "";
+  document.getElementById("post-image").value = ""; // Clear image input
   currentEdit.section = null;
   currentEdit.index = null;
 });
@@ -384,6 +507,7 @@ function clearWritePostModal() {
   document.getElementById("post-section").value = "";
   document.getElementById("post-title").value = "";
   document.getElementById("post-content").value = "";
+  document.getElementById("post-image").value = ""; // Clear image input
 }
 
 // Get Section Name
@@ -407,6 +531,7 @@ function openEditModal(section, index) {
   document.getElementById("post-section").disabled = true;
   document.getElementById("post-title").value = post.title;
   document.getElementById("post-content").value = post.content;
+  document.getElementById("post-image").value = ""; // Clear image input
   currentEdit.section = section;
   currentEdit.index = index;
 }
@@ -540,6 +665,17 @@ function openPostModal(section, index) {
   const modal = document.getElementById("post-modal");
   modal.querySelector(".post-title").textContent = post.title;
   modal.querySelector(".post-body").innerHTML = `<p>${post.content}</p>`;
+
+  // 이미지가 있는 경우 추가
+  if (post.image) {
+    const imageElement = document.createElement("img");
+    imageElement.src = post.image;
+    imageElement.alt = "게시글 이미지";
+    imageElement.style.width = "100%";
+    imageElement.style.marginTop = "15px";
+    modal.querySelector(".post-body").appendChild(imageElement);
+  }
+
   renderComments(post.comments);
   modal.style.display = "flex";
 }
@@ -735,7 +871,6 @@ function showBoardSearchResultContent(result, sectionId) {
 }
 
 // Close Board Search Modal
-// Ensure there's a close functionality if needed
 // Allow Enter key to submit board search
 document
   .getElementById("board-search-input")
@@ -966,18 +1101,5 @@ document.getElementById("logout-button").addEventListener("click", function () {
   document.getElementById("main-content").style.display = "none";
   document.getElementById("login-screen").style.display = "flex";
 });
-// showMainContent 함수 수정하여 로그아웃 버튼 표시
-function showMainContent() {
-  document.getElementById("login-screen").style.display = "none";
-  document.getElementById("main-content").style.display = "flex";
-  // Show the welcome section by default
-  showWelcome();
-  // Show write post button if admin or user (for FAQ)
-  if (userRole === "admin" || userRole === "user") {
-    document.getElementById("write-post-button").style.display = "flex";
-  }
-  // 로그아웃 버튼 표시
-  document.getElementById("logout-button").style.display = "block";
-  // Initialize Leave Applications
-  initializeLeaveApplications();
-}
+
+// FullCalendar 초기화는 showWelcome에서 처리됨
