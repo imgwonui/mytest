@@ -12,9 +12,13 @@ document.getElementById("login-button").addEventListener("click", function () {
   const input = document.getElementById("password-input").value.trim();
   if (input === USER_PASSWORD) {
     userRole = "user";
+    sessionStorage.setItem("login", "true");
+    sessionStorage.setItem("role", userRole);
     showMainContent();
   } else if (input === ADMIN_PASSWORD) {
     userRole = "admin";
+    sessionStorage.setItem("login", "true");
+    sessionStorage.setItem("role", userRole);
     showMainContent();
   } else {
     loginAttempts++;
@@ -29,7 +33,6 @@ document.getElementById("login-button").addEventListener("click", function () {
   }
   document.getElementById("password-input").value = "";
 });
-
 // Allow Enter key to submit
 document
   .getElementById("password-input")
@@ -588,11 +591,16 @@ document
     renderComments(postsData[currentPost.section][currentPost.index].comments);
   });
 
-// Initialize by showing the first section if already logged in
 window.onload = function () {
-  if (userRole) {
-    // If already logged in (e.g., via back button), ensure main content is shown
+  const isLoggedIn = sessionStorage.getItem("login");
+  const role = sessionStorage.getItem("role");
+  if (isLoggedIn === "true" && (role === "admin" || role === "user")) {
+    userRole = role;
     showMainContent();
+  } else {
+    // 로그인 화면 표시
+    document.getElementById("login-screen").style.display = "flex";
+    document.getElementById("main-content").style.display = "none";
   }
 };
 
@@ -946,3 +954,30 @@ document
   .addEventListener("click", function () {
     document.getElementById("leave-search-modal").style.display = "none";
   });
+
+// Logout Handling
+document.getElementById("logout-button").addEventListener("click", function () {
+  sessionStorage.removeItem("login");
+  sessionStorage.removeItem("role");
+  userRole = null;
+  loginAttempts = 0;
+  document.getElementById("logout-button").style.display = "none";
+  document.getElementById("write-post-button").style.display = "none";
+  document.getElementById("main-content").style.display = "none";
+  document.getElementById("login-screen").style.display = "flex";
+});
+// showMainContent 함수 수정하여 로그아웃 버튼 표시
+function showMainContent() {
+  document.getElementById("login-screen").style.display = "none";
+  document.getElementById("main-content").style.display = "flex";
+  // Show the welcome section by default
+  showWelcome();
+  // Show write post button if admin or user (for FAQ)
+  if (userRole === "admin" || userRole === "user") {
+    document.getElementById("write-post-button").style.display = "flex";
+  }
+  // 로그아웃 버튼 표시
+  document.getElementById("logout-button").style.display = "block";
+  // Initialize Leave Applications
+  initializeLeaveApplications();
+}
