@@ -13,7 +13,7 @@ const postsData = {
   "tax-search": [],
   "review-tax-search": [],
   faq: [],
-  "leave-applications": [], // 새로운 휴가신청 섹션 추가
+  "leave-applications": [],
 };
 
 // Pagination Data Structure
@@ -22,7 +22,7 @@ const paginationData = {
   "tax-search": 1,
   "review-tax-search": 1,
   faq: 1,
-  "leave-applications": 1, // 휴가신청 섹션의 페이지 초기화
+  "leave-applications": 1,
 };
 
 const POSTS_PER_PAGE = 10;
@@ -966,12 +966,24 @@ function initializeAttendanceCalendar() {
   attendanceCalendar.render();
 }
 
+// Function to fetch user's IP address
+async function getUserIP() {
+  try {
+    const response = await fetch('https://ipapi.co/json/');
+    const data = await response.json();
+    return data.ip;
+  } catch (error) {
+    console.error('IP 주소를 가져오는 중 오류 발생:', error);
+    return '알 수 없음';
+  }
+}
+
 // 출근/퇴근 버튼 핸들링
 function setupAttendanceFunctionality() {
   const checkInButton = document.getElementById("check-in-button");
   const checkOutButton = document.getElementById("check-out-button");
 
-  checkInButton.addEventListener("click", function () {
+  checkInButton.addEventListener("click", async function () {
     if (!confirm("출근을 기록하시겠습니까?")) {
       return;
     }
@@ -985,8 +997,9 @@ function setupAttendanceFunctionality() {
       return;
     }
 
+    const userIP = await getUserIP();
     attendanceData.checkIns[dateStr] = timeStr;
-    alert(`출근 기록이 추가되었습니다: ${timeStr}`);
+    alert(`출근 기록이 추가되었습니다: ${timeStr} (IP : ${userIP})`);
 
     // Add check-in event to calendar
     attendanceCalendar.addEvent({
@@ -996,7 +1009,7 @@ function setupAttendanceFunctionality() {
     });
   });
 
-  checkOutButton.addEventListener("click", function () {
+  checkOutButton.addEventListener("click", async function () {
     if (!confirm("퇴근을 기록하시겠습니까?")) {
       return;
     }
@@ -1015,8 +1028,9 @@ function setupAttendanceFunctionality() {
       return;
     }
 
+    const userIP = await getUserIP();
     attendanceData.checkOuts[dateStr] = timeStr;
-    alert(`퇴근 기록이 추가되었습니다: ${timeStr}`);
+    alert(`퇴근 기록이 추가되었습니다: ${timeStr} (IP : ${userIP})`);
 
     // Add check-out event to calendar
     attendanceCalendar.addEvent({
