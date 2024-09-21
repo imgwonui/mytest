@@ -42,6 +42,15 @@ let currentApproval = {
   index: null,
 };
 
+// Attendance Data Structure
+const attendanceData = {
+  checkIns: {}, // { 'YYYY-MM-DD': 'HH:MM' }
+  checkOuts: {}, // { 'YYYY-MM-DD': 'HH:MM' }
+};
+
+// Global variable to store FullCalendar instance
+let attendanceCalendar;
+
 // Handle Leave Applications Initialization
 function initializeLeaveApplications() {
   // Initialize Flatpickr for leave date selection
@@ -568,6 +577,16 @@ function showBoardSearchResultContent(result, sectionId) {
   };
 }
 
+// Open Board Search Modal
+function openBoardSearch(sectionId) {
+  const modal = document.getElementById("board-search-modal");
+  modal.setAttribute("data-section", sectionId);
+  modal.querySelector(".board-search-title").textContent = `${getSectionName(
+    sectionId
+  )} 키워드 검색`;
+  modal.style.display = "flex";
+}
+
 // Post Modal
 function openPostModal(section, index) {
   const post = postsData[section][index];
@@ -710,12 +729,7 @@ function setupWritePostFunctionality() {
   const closeWritePost = document.getElementById("close-write-post");
   submitPostButton = document.getElementById("submit-post");
 
-  // 디버깅을 위한 콘솔 로그 추가
-  console.log("Write Post Button Element:", writePostButtonElement);
-  console.log("Write Post Modal Element:", writePostModal);
-
   writePostButtonElement.addEventListener("click", function () {
-    console.log("Write Post Button Clicked"); // 클릭 이벤트 확인
     writePostModal.style.display = "flex";
     document.getElementById("modal-title").textContent =
       userRole === "admin" ? "게시글 작성" : "게시글 작성 (FAQ만 가능)";
@@ -856,6 +870,7 @@ function showSection(sectionId) {
   sections.forEach((sec) => {
     sec.classList.remove("active");
   });
+  
   // 선택된 섹션 표시
   const section = document.getElementById(sectionId);
   if (section) {
@@ -865,16 +880,22 @@ function showSection(sectionId) {
     if (postsData.hasOwnProperty(sectionId)) {
       renderPosts(sectionId);
     }
+    // 출근도장 섹션인 경우
+    if (sectionId === "attendance") {
+      initializeAttendanceCalendar();
+      if (attendanceCalendar) {
+        attendanceCalendar.updateSize(); // 달력의 크기를 업데이트
+      }
+    }
   }
+  
   // 글쓰기 버튼 표시 여부 업데이트
   updateWritePostButtonVisibility(sectionId);
 }
 
+
 function updateWritePostButtonVisibility(sectionId) {
   const writePostButton = document.getElementById("write-post-button");
-  console.log("Updating Write Post Button Visibility for section:", sectionId);
-  console.log("User Role:", userRole);
-
   if (userRole === "admin") {
     if (
       sectionId !== "welcome" &&
@@ -893,11 +914,6 @@ function updateWritePostButtonVisibility(sectionId) {
       writePostButton.style.display = "none";
     }
   }
-
-  console.log(
-    "Write Post Button Display after update:",
-    writePostButton.style.display
-  );
 }
 
 // Logout Handling
@@ -927,14 +943,92 @@ function setupEnterKeyListeners() {
     });
 }
 
-// Initialize Board Search
-function setupBoardSearch() {
-  // Already handled in setupBoardSearchFunctionality
+// Initialize Attendance Calendar
+function initializeAttendanceCalendar() {
+  const calendarEl = document.getElementById("attendance-calendar");
+
+  // FullCalendar instance already exists, return
+  if (attendanceCalendar) {
+    return;
+  }
+
+  attendanceCalendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: "dayGridMonth",
+    height: "auto",
+    headerToolbar: {
+      left: "prev,next today",
+      center: "title",
+      right: "dayGridMonth,timeGridWeek,timeGridDay",
+    },
+    events: []
+  });
+
+  attendanceCalendar.render();
+}
+
+// 출근/퇴근 버튼 핸들링
+function setupAttendanceFunctionality() {
+  const checkInButton = document.getElementById("check-in-button");
+  const checkOutButton = document.getElementById("check-out-button");
+
+  checkInButton.addEventListener("click", function () {
+    if (!confirm("출근을 기록하시겠습니까?")) {
+      return;
+    }
+
+    const today = new Date();
+    const dateStr = today.toISOString().split("T")[0];
+    const timeStr = today.toTimeString().split(" ")[0].slice(0, 5); // "HH:MM"
+
+    if (attendanceData.checkIns[dateStr]) {
+      alert("이미 출근 기록이 있습니다.");
+      return;
+    }
+
+    attendanceData.checkIns[dateStr] = timeStr;
+    alert(`출근 기록이 추가되었습니다: ${timeStr}`);
+
+    // Add check-in event to calendar
+    attendanceCalendar.addEvent({
+      title: `출근: ${timeStr}`,
+      start: dateStr,
+      classNames: ["fc-event-check-in"],
+    });
+  });
+
+  checkOutButton.addEventListener("click", function () {
+    if (!confirm("퇴근을 기록하시겠습니까?")) {
+      return;
+    }
+
+    const today = new Date();
+    const dateStr = today.toISOString().split("T")[0];
+    const timeStr = today.toTimeString().split(" ")[0].slice(0, 5); // "HH:MM"
+
+    if (!attendanceData.checkIns[dateStr]) {
+      alert("출근 기록이 없습니다. 먼저 출근해주세요.");
+      return;
+    }
+
+    if (attendanceData.checkOuts[dateStr]) {
+      alert("이미 퇴근 기록이 있습니다.");
+      return;
+    }
+
+    attendanceData.checkOuts[dateStr] = timeStr;
+    alert(`퇴근 기록이 추가되었습니다: ${timeStr}`);
+
+    // Add check-out event to calendar
+    attendanceCalendar.addEvent({
+      title: `퇴근: ${timeStr}`,
+      start: dateStr,
+      classNames: ["fc-event-check-out"],
+    });
+  });
 }
 
 // Initialize all functionalities after DOM is loaded
 window.addEventListener("DOMContentLoaded", function () {
-  // Define all necessary elements
   const loginButton = document.getElementById("login-button");
   const passwordInput = document.getElementById("password-input");
   const writePostButtonElement = document.getElementById("write-post-button");
@@ -989,6 +1083,9 @@ function showMainContent() {
   document.getElementById("logout-button").style.display = "block";
   // Initialize Leave Applications
   initializeLeaveApplications();
+  // 초기 출근도장 기능 설정
+  initializeAttendanceCalendar();
+  setupAttendanceFunctionality();
 }
 
 // Check Login Status on Page Load
@@ -1018,5 +1115,3 @@ window.addEventListener("load", function () {
     document.getElementById("main-content").style.display
   );
 });
-
-// Board Specific Search Functionality (Already handled)

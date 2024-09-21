@@ -80,6 +80,8 @@
             <li><a href="#" data-section="seat-map">좌석표</a></li>
             <li><a href="#" data-section="links">링크</a></li>
             <li><a href="#" data-section="leave-applications">휴가신청</a></li>
+            <!-- 새로운 출근도장 메뉴 추가 -->
+            <li><a href="#" data-section="attendance">출근도장</a></li>
           </ul>
         </nav>
 
@@ -181,6 +183,16 @@
             </p>
             <div class="pagination" id="leave-applications-pagination"></div>
           </div>
+
+<!-- 출근도장 Section -->
+<div id="attendance" class="section">
+  <h2>출근도장</h2>
+  <div class="attendance-controls">
+    <button id="check-in-button" type="button">출근</button>
+    <button id="check-out-button" type="button">퇴근</button>
+  </div>
+  <div id="attendance-calendar"></div>
+</div>
         </main>
       </div>
 
