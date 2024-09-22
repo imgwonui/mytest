@@ -326,6 +326,8 @@ function renderPosts(section) {
 function openEditModal(section, index) {
   const post = postsData[section][index];
   writePostModal.style.display = "flex";
+  // 스크롤 위치 초기화
+  document.querySelector("#write-post-modal .modal-content").scrollTop = 0;
   document.getElementById("modal-title").textContent = "게시글 수정";
   document.getElementById("post-section").value = section;
   document.getElementById("post-section").disabled = true;
@@ -584,6 +586,10 @@ function openBoardSearch(sectionId) {
   modal.querySelector(".board-search-title").textContent = `${getSectionName(
     sectionId
   )} 키워드 검색`;
+  // 검색 입력 초기화 및 결과 초기화
+  document.getElementById("board-search-input").value = '';
+  document.getElementById("board-search-results").innerHTML = '';
+  document.getElementById("back-board-search-results").style.display = 'none';
   modal.style.display = "flex";
 }
 
@@ -731,6 +737,8 @@ function setupWritePostFunctionality() {
 
   writePostButtonElement.addEventListener("click", function () {
     writePostModal.style.display = "flex";
+    // 모달 스크롤 위치 초기화 (수정 사항)
+    document.querySelector("#write-post-modal .modal-content").scrollTop = 0;
     document.getElementById("modal-title").textContent =
       userRole === "admin" ? "게시글 작성" : "게시글 작성 (FAQ만 가능)";
     document.getElementById("post-section").value =
