@@ -681,7 +681,62 @@ document
     }
   });
 
-// Show Welcome Section
+// Function to render recent notices and FAQs in the dashboard
+function renderDashboard() {
+  const recentNoticesList = document.getElementById("recent-notices-list");
+  const recentFaqList = document.getElementById("recent-faq-list");
+
+  // Define how many recent posts to display
+  const RECENT_POSTS_COUNT = 5;
+
+  // Render Recent Notices
+  const sortedNotices = postsData["notices"].sort(
+    (a, b) => b.timestamp - a.timestamp
+  );
+  const recentNotices = sortedNotices.slice(0, RECENT_POSTS_COUNT);
+  recentNoticesList.innerHTML = "";
+  if (recentNotices.length === 0) {
+    recentNoticesList.innerHTML = "<li>최근 공지사항이 없습니다.</li>";
+  } else {
+    recentNotices.forEach((notice, index) => {
+      const noticeItem = document.createElement("li");
+      const noticeLink = document.createElement("a");
+      noticeLink.href = "#";
+      noticeLink.textContent = notice.title;
+      noticeLink.addEventListener("click", function (e) {
+        e.preventDefault();
+        openPostModal("notices", postsData["notices"].indexOf(notice));
+      });
+      noticeItem.appendChild(noticeLink);
+      recentNoticesList.appendChild(noticeItem);
+    });
+  }
+
+  // Render Recent FAQs
+  const sortedFaqs = postsData["faq"].sort(
+    (a, b) => b.timestamp - a.timestamp
+  );
+  const recentFaqs = sortedFaqs.slice(0, RECENT_POSTS_COUNT);
+  recentFaqList.innerHTML = "";
+  if (recentFaqs.length === 0) {
+    recentFaqList.innerHTML = "<li>최근 FAQ가 없습니다.</li>";
+  } else {
+    recentFaqs.forEach((faq, index) => {
+      const faqItem = document.createElement("li");
+      const faqLink = document.createElement("a");
+      faqLink.href = "#";
+      faqLink.textContent = faq.title;
+      faqLink.addEventListener("click", function (e) {
+        e.preventDefault();
+        openPostModal("faq", postsData["faq"].indexOf(faq));
+      });
+      faqItem.appendChild(faqLink);
+      recentFaqList.appendChild(faqItem);
+    });
+  }
+}
+
+// Modify the showWelcome function to render the dashboard
 function showWelcome() {
   // 모든 섹션 숨기기
   const sections = document.querySelectorAll(".section");
@@ -720,10 +775,13 @@ function showWelcome() {
       calendar.render();
       welcomeSection.dataset.calendarInitialized = "true";
     }
+    // Render the dashboard
+    renderDashboard();
   }
   // 글쓰기 버튼 숨기기
   document.getElementById("write-post-button").style.display = "none";
 }
+
 
 // Write Post Button Handling
 let writePostModal;
