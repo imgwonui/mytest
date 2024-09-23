@@ -129,6 +129,7 @@ function initializeLeaveApplications() {
       alert("휴가 신청이 완료되었습니다.");
       document.getElementById("leave-application-modal").style.display = "none";
       renderPosts("leave-applications");
+      renderDashboardUpdates(); // 대시보드 업데이트 추가
     });
 
   // Leave Approval Modal Handling
@@ -151,6 +152,7 @@ function initializeLeaveApplications() {
         alert("휴가 신청이 승인되었습니다.");
         document.getElementById("leave-approval-modal").style.display = "none";
         renderPosts(currentApproval.section);
+        renderDashboardUpdates(); // 대시보드 업데이트 추가
         currentApproval = {
           section: null,
           index: null,
@@ -170,6 +172,7 @@ function initializeLeaveApplications() {
         alert("휴가 신청이 거절되었습니다.");
         document.getElementById("leave-approval-modal").style.display = "none";
         renderPosts(currentApproval.section);
+        renderDashboardUpdates(); // 대시보드 업데이트 추가
         currentApproval = {
           section: null,
           index: null,
@@ -359,6 +362,61 @@ function renderPosts(section) {
       paginationContainer.appendChild(nextButton);
     }
   }
+
+  // 대시보드 업데이트
+  if (section === "notices" || section === "faq") {
+    renderDashboardUpdates();
+  }
+}
+
+// Function to Render Dashboard Updates
+function renderDashboardUpdates() {
+  const recentNoticesList = document.getElementById("recent-notices-list");
+  const recentFaqList = document.getElementById("recent-faq-list");
+
+  // Clear existing lists
+  recentNoticesList.innerHTML = "";
+  recentFaqList.innerHTML = "";
+
+  // Render latest 5 notices
+  const sortedNotices = [...postsData.notices].sort(
+    (a, b) => b.timestamp - a.timestamp
+  );
+  const latestNotices = sortedNotices.slice(0, 5);
+  latestNotices.forEach((post) => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = "#";
+    a.textContent = post.title;
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      // Find the index in postsData.notices
+      const actualIndex = postsData.notices.indexOf(post);
+      openPostModal("notices", actualIndex);
+    });
+    li.appendChild(a);
+    recentNoticesList.appendChild(li);
+  });
+
+  // Render latest 5 FAQ
+  const sortedFaq = [...postsData.faq].sort(
+    (a, b) => b.timestamp - a.timestamp
+  );
+  const latestFaq = sortedFaq.slice(0, 5);
+  latestFaq.forEach((post) => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = "#";
+    a.textContent = post.title;
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      // Find the index in postsData.faq
+      const actualIndex = postsData.faq.indexOf(post);
+      openPostModal("faq", actualIndex);
+    });
+    li.appendChild(a);
+    recentFaqList.appendChild(li);
+  });
 }
 
 // Edit Post
@@ -382,6 +440,7 @@ function deletePost(section, index) {
   if (confirm("정말 이 게시글을 삭제하시겠습니까?")) {
     postsData[section].splice(index, 1);
     renderPosts(section);
+    renderDashboardUpdates(); // 대시보드 업데이트 추가
   }
 }
 
@@ -1006,6 +1065,9 @@ function showWelcome() {
 
   // Initialize the welcome calendar
   initializeWelcomeCalendar();
+
+  // Render Dashboard Updates
+  renderDashboardUpdates();
 }
 
 // Open Post Modal
@@ -1114,7 +1176,7 @@ document
 function openLeaveApprovalModal(section, index) {
   const leaveApplication = postsData[section][index];
   const modal = document.getElementById("leave-approval-modal");
-  const modalContent = document.getElementById("leave-approval-modal-content");
+  const modalContent = document.getElementById("approval-details");
 
   modalContent.innerHTML = `
       <h2>휴가 신청 상세 정보</h2>
