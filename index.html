@@ -351,8 +351,15 @@
         </select>
         <input type="text" id="post-title" placeholder="제목" />
         <textarea id="post-content" placeholder="내용"></textarea>
-        <!-- 이미지 업로드 필드 추가 -->
+        <!-- 이미지 업로드 필드 (기존 유지) -->
         <input type="file" id="post-image" accept="image/*" />
+        <!-- 파일 업로드 필드 추가 (자료실 전용, 기본적으로 숨김) -->
+        <input
+          type="file"
+          id="post-file"
+          accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar"
+          style="display: none"
+        />
         <!-- 세법 태그 선택 섹션 추가 -->
         <div id="tax-tags-section" style="display: none">
           <h3 style="margin-top: 20px">태그 선택 (필수)</h3>

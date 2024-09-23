@@ -283,6 +283,16 @@ function renderPosts(section) {
       postTitleDiv.appendChild(imageIcon);
     }
 
+    // 자료실 게시판의 경우 파일 다운로드 링크 표시
+    if (section === "data-room" && post.file) {
+      const fileLink = document.createElement("a");
+      fileLink.href = post.file;
+      fileLink.download = post.title; // 필요에 따라 파일명 조정 가능
+      fileLink.textContent = "파일 다운로드";
+      fileLink.style.marginLeft = "10px";
+      postTitleDiv.appendChild(fileLink);
+    }
+
     // 액션 버튼
     if (userRole === "admin" && section !== "leave-applications") {
       const postActionsDiv = document.createElement("div");
@@ -621,11 +631,23 @@ function setupWritePostFunctionality() {
   const sectionSelect = document.getElementById("post-section");
   const taxTagsSection = document.getElementById("tax-tags-section");
 
+  const postImage = document.getElementById("post-image");
+  const postFile = document.getElementById("post-file");
+
   sectionSelect.addEventListener("change", function () {
     if (this.value === "tax-question-search") {
       taxTagsSection.style.display = "block";
     } else {
       taxTagsSection.style.display = "none";
+    }
+
+    // 게시판에 따라 파일 업로드 필드 표시/숨김
+    if (this.value === "data-room") {
+      postImage.style.display = "none";
+      postFile.style.display = "block";
+    } else {
+      postFile.style.display = "none";
+      postImage.style.display = "block";
     }
   });
 
@@ -643,7 +665,9 @@ function setupWritePostFunctionality() {
     const title = document.getElementById("post-title").value.trim();
     const content = document.getElementById("post-content").value.trim();
     const imageInput = document.getElementById("post-image");
+    const fileInput = document.getElementById("post-file");
     let imageData = null;
+    let fileData = null;
 
     if (sectionId === "") {
       alert("게시판을 선택해주세요.");
@@ -663,20 +687,30 @@ function setupWritePostFunctionality() {
       return;
     }
 
-    if (imageInput.files.length > 0) {
-      const file = imageInput.files[0];
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        imageData = reader.result;
-        savePost(sectionId, title, content, imageData);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      savePost(sectionId, title, content, imageData);
+    if (sectionId === "data-room") {
+      // 자료실 게시판인 경우 파일 업로드 처리
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+
+        // 파일 크기 확인
+        if (file.size > MAX_FILE_SIZE) {
+          alert("업로드할 수 있는 파일 크기는 10MB를 초과할 수 없습니다.");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = function () {
+          fileData = reader.result;
+          savePost(sectionId, title, content, null, fileData);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        savePost(sectionId, title, content, null, null);
+      }
     }
   });
 
-  function savePost(sectionId, title, content, imageData) {
+  function savePost(sectionId, title, content, imageData, fileData) {
     const now = new Date();
     const formattedDate = `${now.getFullYear()}-${(now.getMonth() + 1)
       .toString()
@@ -694,8 +728,14 @@ function setupWritePostFunctionality() {
       const post = postsData[currentEdit.section][currentEdit.index];
       post.title = title;
       post.content = content;
-      if (imageData) {
-        post.image = imageData;
+      if (sectionId === "data-room") {
+        if (fileData) {
+          post.file = fileData;
+        }
+      } else {
+        if (imageData) {
+          post.image = imageData;
+        }
       }
       alert("게시글이 수정되었습니다.");
       currentEdit.section = null;
@@ -708,9 +748,17 @@ function setupWritePostFunctionality() {
         timestamp: Date.now(),
         date: formattedDate,
         comments: [],
-        image: imageData,
+        image: null,
+        file: null,
         tag: sectionId === "tax-question-search" ? selectedTaxTag : null,
       };
+
+      if (sectionId === "data-room" && fileData) {
+        post.file = fileData;
+      } else if (imageData) {
+        post.image = imageData;
+      }
+
       postsData[sectionId].push(post);
     }
 
@@ -1038,6 +1086,8 @@ function showWelcome() {
   renderDashboardUpdates();
 }
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
 // Open Post Modal
 function openPostModal(section, index) {
   const post = postsData[section][index];
@@ -1052,6 +1102,26 @@ function openPostModal(section, index) {
   modalTitle.textContent = post.title;
   modalContent.innerHTML = post.content.replace(/\n/g, "<br>");
   modalDate.textContent = post.date;
+
+  if (section === "data-room" && post.file) {
+    const downloadLink = document.createElement("a");
+    downloadLink.href = post.file;
+    downloadLink.download = post.title; // 필요에 따라 파일명 조정 가능
+    downloadLink.textContent = "파일 다운로드";
+    downloadLink.style.display = "block";
+    downloadLink.style.marginTop = "10px";
+    modalContent.appendChild(downloadLink);
+  }
+
+  if (section === "data-room" && post.file) {
+    const downloadLink = document.createElement("a");
+    downloadLink.href = post.file;
+    downloadLink.download = post.title; // 필요에 따라 파일명 조정 가능
+    downloadLink.textContent = "파일 다운로드";
+    downloadLink.style.display = "block";
+    downloadLink.style.marginTop = "10px";
+    modalContent.appendChild(downloadLink);
+  }
 
   if (post.image) {
     modalImage.src = post.image;
