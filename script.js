@@ -177,6 +177,7 @@ function initializeLeaveApplications() {
       }
     });
 }
+
 // 전역 변수 선언
 let writePostModal;
 let submitPostButton;
@@ -470,9 +471,9 @@ function showSearchResultContent(result) {
   const resultsContainer = document.getElementById("search-results");
   const backButton = document.getElementById("back-search-results");
   resultsContainer.innerHTML = `
-                <h3>${result.title}</h3>
-                <p>${result.content}</p>
-            `;
+                  <h3>${result.title}</h3>
+                  <p>${result.content}</p>
+              `;
   backButton.style.display = "block";
 
   backButton.onclick = function () {
@@ -568,9 +569,9 @@ function displayBoardSearchResults(sectionId, results) {
 // Write Post Functionality
 function setupWritePostFunctionality() {
   const writePostButton = document.getElementById("write-post-button");
-  const writePostModal = document.getElementById("write-post-modal");
+  writePostModal = document.getElementById("write-post-modal");
   const closeModalButton = document.getElementById("close-modal");
-  const submitPostButton = document.getElementById("submit-post");
+  submitPostButton = document.getElementById("submit-post");
 
   writePostButton.addEventListener("click", function () {
     writePostModal.style.display = "flex";
@@ -688,6 +689,8 @@ function clearWritePostModal() {
   document.getElementById("post-title").value = "";
   document.getElementById("post-content").value = "";
   document.getElementById("post-image").value = ""; // Clear image input
+  document.getElementById("post-section").disabled = false; // 추가
+  document.getElementById("tax-tags-section").style.display = "none"; // 추가
 }
 
 // Navigation Handling
@@ -1035,9 +1038,9 @@ function openPostModal(section, index) {
     const commentElement = document.createElement("div");
     commentElement.className = "comment";
     commentElement.innerHTML = `
-      <p>${comment.content}</p>
-      <small>${comment.date}</small>
-    `;
+        <p>${comment.content}</p>
+        <small>${comment.date}</small>
+      `;
 
     // Add delete button for admin
     if (userRole === "admin") {
@@ -1114,13 +1117,13 @@ function openLeaveApprovalModal(section, index) {
   const modalContent = document.getElementById("leave-approval-modal-content");
 
   modalContent.innerHTML = `
-    <h2>휴가 신청 상세 정보</h2>
-    <p><strong>신청 날짜:</strong> ${leaveApplication.date}</p>
-    <p><strong>휴가 유형:</strong> ${
-      leaveApplication.type === "full-day" ? "종일" : "반차"
-    }</p>
-    <p><strong>사유:</strong> ${leaveApplication.reason}</p>
-  `;
+      <h2>휴가 신청 상세 정보</h2>
+      <p><strong>신청 날짜:</strong> ${leaveApplication.date}</p>
+      <p><strong>휴가 유형:</strong> ${
+        leaveApplication.type === "full-day" ? "종일" : "반차"
+      }</p>
+      <p><strong>사유:</strong> ${leaveApplication.reason}</p>
+    `;
 
   currentApproval.section = section;
   currentApproval.index = index;
@@ -1130,10 +1133,10 @@ function openLeaveApprovalModal(section, index) {
 
 // Initialize the application
 window.addEventListener("load", function () {
-  setupNavigationHandling();
-  setupSearchFunctionality();
-  setupBoardSearchFunctionality();
-  setupWritePostFunctionality();
-  setupLogoutHandling();
-  setupEnterKeyListeners();
+  // setupNavigationHandling();
+  // setupSearchFunctionality();
+  // setupBoardSearchFunctionality();
+  // setupWritePostFunctionality();
+  // setupLogoutHandling();
+  // setupEnterKeyListeners();
 });

@@ -828,7 +828,7 @@ footer {
 #board-search-modal .modal-content .board-search-body p,
 #leave-approval-modal .modal-content .approval-details p,
 #leave-search-modal .modal-content .leave-search-body p {
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.6;
   color: #555;
 }
