@@ -16,6 +16,24 @@ const postsData = {
   "leave-applications": [],
 };
 
+// Initialize Welcome Calendar
+function initializeWelcomeCalendar() {
+  const calendarEl = document.getElementById("calendar");
+
+  const welcomeCalendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: "dayGridMonth",
+    height: "auto",
+    headerToolbar: {
+      left: "prev,next today",
+      center: "title",
+      right: "dayGridMonth,timeGridWeek,timeGridDay",
+    },
+    events: [],
+  });
+
+  welcomeCalendar.render();
+}
+
 // Pagination Data Structure
 const paginationData = {
   notices: 1,
@@ -50,6 +68,9 @@ const attendanceData = {
 
 // Global variable to store FullCalendar instance
 let attendanceCalendar;
+
+// 전역 변수 추가
+let selectedTaxTag = null;
 
 // Handle Leave Applications Initialization
 function initializeLeaveApplications() {
@@ -156,6 +177,9 @@ function initializeLeaveApplications() {
       }
     });
 }
+// 전역 변수 선언
+let writePostModal;
+let submitPostButton;
 
 // Get Section Name
 function getSectionName(sectionId) {
@@ -208,11 +232,25 @@ function renderPosts(section) {
     postNumber.textContent = `#${postsData[section].length - actualIndex}`;
     postTitleDiv.appendChild(postNumber);
 
+    // 세법 게시판의 경우 태그 추가
+    if (section === "tax-search" && post.tag) {
+      const tagSpan = document.createElement("span");
+      tagSpan.className = "post-tag";
+      tagSpan.textContent = post.tag;
+      postTitleDiv.appendChild(tagSpan);
+    }
+
     // 제목
     const titleSpan = document.createElement("span");
     titleSpan.className = "post-title-text";
     titleSpan.textContent = post.title;
     postTitleDiv.appendChild(titleSpan);
+
+    // 제목 클릭 시 모달 열기
+    titleSpan.addEventListener("click", function () {
+      openPostModal(section, actualIndex);
+    });
+    titleSpan.style.cursor = "pointer"; // 커서 스타일 변경
 
     // 상세 정보 (날짜)
     const postDetails = document.createElement("span");
@@ -386,7 +424,6 @@ function setupSearchFunctionality() {
       }
     });
 
-  // Close Search Modal
   document.getElementById("close-modal").addEventListener("click", function () {
     document.getElementById("search-modal").style.display = "none";
   });
@@ -464,443 +501,186 @@ function showSearchResultContent(result) {
   };
 }
 
-// Board Specific Search Functionality
 function setupBoardSearchFunctionality() {
-  document
-    .getElementById("close-board-search-modal")
-    .addEventListener("click", function () {
-      document.getElementById("board-search-modal").style.display = "none";
-    });
+  const boardSearchButton = document.getElementById("board-search-button");
+  const closeBoardSearchModalButton = document.getElementById(
+    "close-board-search-modal"
+  );
 
-  document
-    .getElementById("board-search-button")
-    .addEventListener("click", function () {
-      const modal = document.getElementById("board-search-modal");
-      const sectionId = modal.getAttribute("data-section");
-      const query = document
-        .getElementById("board-search-input")
-        .value.trim()
-        .toLowerCase();
-      if (query === "") {
-        alert("검색어를 입력해주세요.");
-        return;
-      }
-      const results = [];
-      postsData[sectionId].forEach((post, index) => {
-        if (
-          post.title.toLowerCase().includes(query) ||
-          post.content.toLowerCase().includes(query)
-        ) {
-          results.push({
-            title: post.title,
-            content: post.content,
-            index: index,
-          });
-        }
-      });
-      displayBoardSearchResults(results, sectionId);
-    });
-
-  document
-    .getElementById("board-search-input")
-    .addEventListener("keypress", function (e) {
-      if (e.key === "Enter") {
-        document.getElementById("board-search-button").click();
-      }
-    });
-
-  // Close Board Search Modal
-  document
-    .getElementById("close-board-search-modal")
-    .addEventListener("click", function () {
-      document.getElementById("board-search-modal").style.display = "none";
-    });
-}
-
-function displayBoardSearchResults(results, sectionId) {
-  const resultsContainer = document.getElementById("board-search-results");
-  const backButton = document.getElementById("back-board-search-results");
-  resultsContainer.innerHTML = "";
-  backButton.style.display = "none";
-
-  if (results.length === 0) {
-    resultsContainer.innerHTML = "<p>검색 결과가 없습니다.</p>";
-  } else {
-    results.forEach((result) => {
-      const resultDiv = document.createElement("div");
-      resultDiv.className = "result";
-      const titleButton = document.createElement("button");
-      titleButton.style.background = "none";
-      titleButton.style.border = "none";
-      titleButton.style.color = "#0071e3";
-      titleButton.style.cursor = "pointer";
-      titleButton.style.fontSize = "18px";
-      titleButton.style.textAlign = "left";
-      titleButton.style.padding = "5px 0";
-      titleButton.innerHTML = `<strong>${result.title}</strong>`;
-      titleButton.addEventListener("click", function () {
-        showBoardSearchResultContent(result, sectionId);
-      });
-      resultDiv.appendChild(titleButton);
-      resultsContainer.appendChild(resultDiv);
-    });
-  }
-}
-
-function showBoardSearchResultContent(result, sectionId) {
-  const resultsContainer = document.getElementById("board-search-results");
-  const backButton = document.getElementById("back-board-search-results");
-  resultsContainer.innerHTML = `
-                <h3>${result.title}</h3>
-                <p>${result.content}</p>
-            `;
-  backButton.style.display = "block";
-
-  backButton.onclick = function () {
-    // Re-display the list of results
-    const currentQuery = document
+  // 검색 버튼 클릭 이벤트
+  boardSearchButton.addEventListener("click", function () {
+    const sectionId =
+      document.getElementById("board-search-modal").dataset.sectionId;
+    const query = document
       .getElementById("board-search-input")
       .value.trim()
       .toLowerCase();
-    const filteredResults = [];
-    postsData[sectionId].forEach((post, index) => {
-      if (
-        post.title.toLowerCase().includes(currentQuery) ||
-        post.content.toLowerCase().includes(currentQuery)
-      ) {
-        filteredResults.push({
-          title: post.title,
-          content: post.content,
-          index: index,
-        });
-      }
-    });
-    displayBoardSearchResults(filteredResults, sectionId);
-  };
-}
 
-// Open Board Search Modal
-function openBoardSearch(sectionId) {
-  const modal = document.getElementById("board-search-modal");
-  modal.setAttribute("data-section", sectionId);
-  modal.querySelector(".board-search-title").textContent = `${getSectionName(
-    sectionId
-  )} 키워드 검색`;
-  // 검색 입력 초기화 및 결과 초기화
-  document.getElementById("board-search-input").value = '';
-  document.getElementById("board-search-results").innerHTML = '';
-  document.getElementById("back-board-search-results").style.display = 'none';
-  modal.style.display = "flex";
-}
+    if (query === "") {
+      alert("검색어를 입력해주세요.");
+      return;
+    }
 
-// Post Modal
-function openPostModal(section, index) {
-  const post = postsData[section][index];
-  currentPost = { section: section, index: index };
-  const modal = document.getElementById("post-modal");
-  modal.querySelector(".post-title").textContent = post.title;
-  modal.querySelector(".post-body").innerHTML = `<p>${post.content}</p>`;
+    const results = postsData[sectionId].filter(
+      (post) =>
+        post.title.toLowerCase().includes(query) ||
+        post.content.toLowerCase().includes(query)
+    );
 
-  // 이미지가 있는 경우 추가
-  if (post.image) {
-    const imageElement = document.createElement("img");
-    imageElement.src = post.image;
-    imageElement.alt = "게시글 이미지";
-    imageElement.style.width = "100%";
-    imageElement.style.marginTop = "15px";
-    modal.querySelector(".post-body").appendChild(imageElement);
-  }
-
-  renderComments(post.comments);
-  modal.style.display = "flex";
-}
-
-document
-  .getElementById("close-post-modal")
-  .addEventListener("click", function () {
-    document.getElementById("post-modal").style.display = "none";
-    currentPost = null;
+    displayBoardSearchResults(sectionId, results);
   });
 
-// Comments Functionality
-function renderComments(comments) {
-  const commentsList = document.getElementById("comments-list");
-  commentsList.innerHTML = "";
-  if (comments.length === 0) {
-    commentsList.innerHTML = "<p>댓글이 없습니다.</p>";
+  // 모달 닫기 버튼 클릭 이벤트
+  closeBoardSearchModalButton.addEventListener("click", function () {
+    document.getElementById("board-search-modal").style.display = "none";
+  });
+}
+
+function displayBoardSearchResults(sectionId, results) {
+  const resultsContainer = document.getElementById("board-search-results");
+  resultsContainer.innerHTML = "";
+
+  if (results.length === 0) {
+    resultsContainer.innerHTML = "<p>검색 결과가 없습니다.</p>";
     return;
   }
-  comments.forEach((comment) => {
-    const commentDiv = document.createElement("div");
-    commentDiv.className = "comment";
-    commentDiv.innerHTML = `
-                <div class="comment-author">${comment.author}</div>
-                <div class="comment-content">${comment.content}</div>
-            `;
-    commentsList.appendChild(commentDiv);
-  });
-}
 
-document
-  .getElementById("add-comment-button")
-  .addEventListener("click", function () {
-    const commentInput = document.getElementById("comment-input").value.trim();
-    if (commentInput === "") {
-      alert("댓글을 입력해주세요.");
-      return;
-    }
-    if (!currentPost) {
-      alert("현재 선택된 게시글이 없습니다.");
-      return;
-    }
-    const comment = {
-      author: userRole === "admin" ? "관리자" : "일반 사용자",
-      content: commentInput,
-    };
-    postsData[currentPost.section][currentPost.index].comments.push(comment);
-    document.getElementById("comment-input").value = "";
-    renderComments(postsData[currentPost.section][currentPost.index].comments);
-  });
-
-// Allow Enter key to add comment
-document
-  .getElementById("comment-input")
-  .addEventListener("keypress", function (e) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      document.getElementById("add-comment-button").click();
-    }
-  });
-
-// Allow Enter key to submit post
-document
-  .getElementById("post-content")
-  .addEventListener("keypress", function (e) {
-    if (e.key === "Enter" && e.ctrlKey) {
-      document.getElementById("submit-post").click();
-    }
-  });
-
-// Function to render recent notices and FAQs in the dashboard
-function renderDashboard() {
-  const recentNoticesList = document.getElementById("recent-notices-list");
-  const recentFaqList = document.getElementById("recent-faq-list");
-
-  // Define how many recent posts to display
-  const RECENT_POSTS_COUNT = 5;
-
-  // Render Recent Notices
-  const sortedNotices = postsData["notices"].sort(
-    (a, b) => b.timestamp - a.timestamp
-  );
-  const recentNotices = sortedNotices.slice(0, RECENT_POSTS_COUNT);
-  recentNoticesList.innerHTML = "";
-  if (recentNotices.length === 0) {
-    recentNoticesList.innerHTML = "<li>최근 공지사항이 없습니다.</li>";
-  } else {
-    recentNotices.forEach((notice, index) => {
-      const noticeItem = document.createElement("li");
-      const noticeLink = document.createElement("a");
-      noticeLink.href = "#";
-      noticeLink.textContent = notice.title;
-      noticeLink.addEventListener("click", function (e) {
-        e.preventDefault();
-        openPostModal("notices", postsData["notices"].indexOf(notice));
-      });
-      noticeItem.appendChild(noticeLink);
-      recentNoticesList.appendChild(noticeItem);
+  results.forEach((result, index) => {
+    const resultDiv = document.createElement("div");
+    resultDiv.className = "result";
+    const titleButton = document.createElement("button");
+    titleButton.style.background = "none";
+    titleButton.style.border = "none";
+    titleButton.style.color = "#0071e3";
+    titleButton.style.cursor = "pointer";
+    titleButton.style.fontSize = "18px";
+    titleButton.style.textAlign = "left";
+    titleButton.style.padding = "5px 0";
+    titleButton.innerHTML = `<strong>${result.title}</strong>`;
+    titleButton.addEventListener("click", function () {
+      openPostModal(sectionId, postsData[sectionId].indexOf(result));
     });
-  }
-
-  // Render Recent FAQs
-  const sortedFaqs = postsData["faq"].sort(
-    (a, b) => b.timestamp - a.timestamp
-  );
-  const recentFaqs = sortedFaqs.slice(0, RECENT_POSTS_COUNT);
-  recentFaqList.innerHTML = "";
-  if (recentFaqs.length === 0) {
-    recentFaqList.innerHTML = "<li>최근 FAQ가 없습니다.</li>";
-  } else {
-    recentFaqs.forEach((faq, index) => {
-      const faqItem = document.createElement("li");
-      const faqLink = document.createElement("a");
-      faqLink.href = "#";
-      faqLink.textContent = faq.title;
-      faqLink.addEventListener("click", function (e) {
-        e.preventDefault();
-        openPostModal("faq", postsData["faq"].indexOf(faq));
-      });
-      faqItem.appendChild(faqLink);
-      recentFaqList.appendChild(faqItem);
-    });
-  }
-}
-
-// Modify the showWelcome function to render the dashboard
-function showWelcome() {
-  // 모든 섹션 숨기기
-  const sections = document.querySelectorAll(".section");
-  sections.forEach((sec) => {
-    sec.classList.remove("active");
+    resultDiv.appendChild(titleButton);
+    resultsContainer.appendChild(resultDiv);
   });
-  // 환영 섹션 표시
-  const welcomeSection = document.getElementById("welcome");
-  if (welcomeSection) {
-    welcomeSection.classList.add("active");
-    // Initialize and render the calendar if not already done
-    if (!welcomeSection.dataset.calendarInitialized) {
-      const calendarEl = document.getElementById("calendar");
-      const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: "dayGridMonth",
-        height: "auto",
-        headerToolbar: {
-          left: "prev,next today",
-          center: "title",
-          right: "dayGridMonth,timeGridWeek,timeGridDay",
-        },
-        events: [
-          // 기본 이벤트 추가 (필요에 따라 수정)
-          {
-            title: "쉬고싶다",
-            start: "2024-10-10",
-            end: "2024-10-12",
-          },
-          {
-            title: "걍 쉬는 나",
-            start: "2024-10-15",
-          },
-          // 추가 이벤트는 여기에...
-        ],
-      });
-      calendar.render();
-      welcomeSection.dataset.calendarInitialized = "true";
-    }
-    // Render the dashboard
-    renderDashboard();
-  }
-  // 글쓰기 버튼 숨기기
-  document.getElementById("write-post-button").style.display = "none";
 }
 
-
-// Write Post Button Handling
-let writePostModal;
-let submitPostButton;
-
+// Write Post Functionality
 function setupWritePostFunctionality() {
-  const writePostButtonElement = document.getElementById("write-post-button");
-  writePostModal = document.getElementById("write-post-modal");
-  const closeWritePost = document.getElementById("close-write-post");
-  submitPostButton = document.getElementById("submit-post");
+  const writePostButton = document.getElementById("write-post-button");
+  const writePostModal = document.getElementById("write-post-modal");
+  const closeModalButton = document.getElementById("close-modal");
+  const submitPostButton = document.getElementById("submit-post");
 
-  writePostButtonElement.addEventListener("click", function () {
+  writePostButton.addEventListener("click", function () {
     writePostModal.style.display = "flex";
-    // 모달 스크롤 위치 초기화 (수정 사항)
-    document.querySelector("#write-post-modal .modal-content").scrollTop = 0;
-    document.getElementById("modal-title").textContent =
-      userRole === "admin" ? "게시글 작성" : "게시글 작성 (FAQ만 가능)";
-    document.getElementById("post-section").value =
-      userRole === "admin" ? "" : "faq";
-    document.getElementById("post-section").disabled = userRole !== "admin";
-    document.getElementById("post-title").value = "";
-    document.getElementById("post-content").value = "";
-    document.getElementById("post-image").value = ""; // Clear image input
-    currentEdit.section = null;
-    currentEdit.index = null;
+    document.getElementById("modal-title").textContent = "새 게시글 작성";
+    document.getElementById("post-section").disabled = false;
+    clearWritePostModal();
   });
 
-  // Close Write Post Modal
-  closeWritePost.addEventListener("click", function () {
+  closeModalButton.addEventListener("click", function () {
     writePostModal.style.display = "none";
     clearWritePostModal();
   });
 
-  // Submit Post
+  const sectionSelect = document.getElementById("post-section");
+  const taxTagsSection = document.getElementById("tax-tags-section");
+
+  sectionSelect.addEventListener("change", function () {
+    if (this.value === "tax-search") {
+      taxTagsSection.style.display = "block";
+    } else {
+      taxTagsSection.style.display = "none";
+    }
+  });
+
+  const taxTags = document.querySelectorAll(".tax-tag");
+  taxTags.forEach((tag) => {
+    tag.addEventListener("click", function () {
+      taxTags.forEach((t) => t.classList.remove("selected"));
+      this.classList.add("selected");
+      selectedTaxTag = this.dataset.tag;
+    });
+  });
+
   submitPostButton.addEventListener("click", function () {
-    const sectionSelect = document.getElementById("post-section");
-    const sectionId = sectionSelect.value;
+    const sectionId = document.getElementById("post-section").value;
     const title = document.getElementById("post-title").value.trim();
     const content = document.getElementById("post-content").value.trim();
     const imageInput = document.getElementById("post-image");
-    const imageFile = imageInput.files[0];
+    let imageData = null;
 
     if (sectionId === "") {
       alert("게시판을 선택해주세요.");
       return;
     }
-    if (title === "" || content === "") {
-      alert("제목과 내용을 모두 입력해주세요.");
+    if (title === "") {
+      alert("제목을 입력해주세요.");
+      return;
+    }
+    if (content === "") {
+      alert("내용을 입력해주세요.");
       return;
     }
 
-    const now = new Date();
-    const formattedDate = `${now.getFullYear()}-${String(
-      now.getMonth() + 1
-    ).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(
-      now.getHours()
-    ).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    if (sectionId === "tax-search" && !selectedTaxTag) {
+      alert("세법 게시글의 경우 태그를 선택해주세요.");
+      return;
+    }
 
-    if (imageFile) {
+    if (imageInput.files.length > 0) {
+      const file = imageInput.files[0];
       const reader = new FileReader();
-      reader.onload = function (e) {
-        const imageData = e.target.result; // base64 데이터
-
-        if (currentEdit.section !== null && currentEdit.index !== null) {
-          // 수정 모드
-          const post = postsData[currentEdit.section][currentEdit.index];
-          post.title = title;
-          post.content = content;
-          post.date = formattedDate;
-          post.image = imageData; // 이미지 업데이트
-          alert("게시글이 수정되었습니다.");
-          currentEdit.section = null;
-          currentEdit.index = null;
-        } else {
-          // 작성 모드
-          const post = {
-            title: title,
-            content: content,
-            timestamp: Date.now(),
-            date: formattedDate,
-            comments: [],
-            image: imageData, // 이미지 추가
-          };
-          postsData[sectionId].push(post);
-        }
-
-        writePostModal.style.display = "none";
-        clearWritePostModal();
-        showSection(sectionId);
+      reader.onloadend = function () {
+        imageData = reader.result;
+        savePost(sectionId, title, content, imageData);
       };
-      reader.readAsDataURL(imageFile);
+      reader.readAsDataURL(file);
     } else {
-      // 이미지 없을 경우
-      if (currentEdit.section !== null && currentEdit.index !== null) {
-        // 수정 모드
-        const post = postsData[currentEdit.section][currentEdit.index];
-        post.title = title;
-        post.content = content;
-        post.date = formattedDate;
-        alert("게시글이 수정되었습니다.");
-        currentEdit.section = null;
-        currentEdit.index = null;
-      } else {
-        // 작성 모드
-        const post = {
-          title: title,
-          content: content,
-          timestamp: Date.now(),
-          date: formattedDate,
-          comments: [],
-        };
-        postsData[sectionId].push(post);
-      }
-
-      writePostModal.style.display = "none";
-      clearWritePostModal();
-      showSection(sectionId);
+      savePost(sectionId, title, content, imageData);
     }
   });
+
+  function savePost(sectionId, title, content, imageData) {
+    const now = new Date();
+    const formattedDate = `${now.getFullYear()}-${(now.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")}`;
+
+    if (currentEdit.section && currentEdit.index !== null) {
+      // 수정 모드
+      const post = postsData[currentEdit.section][currentEdit.index];
+      post.title = title;
+      post.content = content;
+      if (imageData) {
+        post.image = imageData;
+      }
+      alert("게시글이 수정되었습니다.");
+      currentEdit.section = null;
+      currentEdit.index = null;
+    } else {
+      // 작성 모드
+      const post = {
+        title: title,
+        content: content,
+        timestamp: Date.now(),
+        date: formattedDate,
+        comments: [],
+        image: imageData,
+        tag: sectionId === "tax-search" ? selectedTaxTag : null,
+      };
+      postsData[sectionId].push(post);
+    }
+
+    writePostModal.style.display = "none";
+    clearWritePostModal();
+    showSection(sectionId);
+
+    // 게시 후 선택된 태그 초기화
+    selectedTaxTag = null;
+    taxTags.forEach((t) => t.classList.remove("selected"));
+  }
 }
 
 function clearWritePostModal() {
@@ -936,7 +716,7 @@ function showSection(sectionId) {
   sections.forEach((sec) => {
     sec.classList.remove("active");
   });
-  
+
   // 선택된 섹션 표시
   const section = document.getElementById(sectionId);
   if (section) {
@@ -954,11 +734,10 @@ function showSection(sectionId) {
       }
     }
   }
-  
+
   // 글쓰기 버튼 표시 여부 업데이트
   updateWritePostButtonVisibility(sectionId);
 }
-
 
 function updateWritePostButtonVisibility(sectionId) {
   const writePostButton = document.getElementById("write-post-button");
@@ -1026,7 +805,7 @@ function initializeAttendanceCalendar() {
       center: "title",
       right: "dayGridMonth,timeGridWeek,timeGridDay",
     },
-    events: []
+    events: [],
   });
 
   attendanceCalendar.render();
@@ -1035,12 +814,12 @@ function initializeAttendanceCalendar() {
 // Function to fetch user's IP address
 async function getUserIP() {
   try {
-    const response = await fetch('https://ipapi.co/json/');
+    const response = await fetch("https://ipapi.co/json/");
     const data = await response.json();
     return data.ip;
   } catch (error) {
-    console.error('IP 주소를 가져오는 중 오류 발생:', error);
-    return '알 수 없음';
+    console.error("IP 주소를 가져오는 중 오류 발생:", error);
+    return "알 수 없음";
   }
 }
 
@@ -1194,4 +973,167 @@ window.addEventListener("load", function () {
     "main-content:",
     document.getElementById("main-content").style.display
   );
+});
+
+function openBoardSearch(sectionId) {
+  // Display the board search modal
+  const boardSearchModal = document.getElementById("board-search-modal");
+  boardSearchModal.style.display = "flex";
+
+  // Set the section ID to the modal
+  boardSearchModal.dataset.sectionId = sectionId;
+
+  // Update the modal title
+  const modalTitle = boardSearchModal.querySelector(".board-search-title");
+  modalTitle.textContent = getSectionName(sectionId) + " 키워드 검색";
+
+  // Clear previous input and results
+  document.getElementById("board-search-input").value = "";
+  document.getElementById("board-search-results").innerHTML = "";
+}
+
+// Show Welcome Section
+function showWelcome() {
+  const sections = document.querySelectorAll(".section");
+  sections.forEach((sec) => {
+    sec.classList.remove("active");
+  });
+  document.getElementById("welcome").classList.add("active");
+  document.getElementById("write-post-button").style.display = "none";
+
+  // Initialize the welcome calendar
+  initializeWelcomeCalendar();
+}
+
+// Open Post Modal
+function openPostModal(section, index) {
+  const post = postsData[section][index];
+  currentPost = { section, index };
+  const modal = document.getElementById("post-modal");
+  const modalTitle = document.getElementById("post-modal-title");
+  const modalContent = document.getElementById("post-modal-content");
+  const modalImage = document.getElementById("post-modal-image");
+  const modalDate = document.getElementById("post-modal-date");
+  const commentSection = document.getElementById("comments-list");
+
+  modalTitle.textContent = post.title;
+  modalContent.innerHTML = post.content.replace(/\n/g, "<br>");
+  modalDate.textContent = post.date;
+
+  if (post.image) {
+    modalImage.src = post.image;
+    modalImage.style.display = "block";
+  } else {
+    modalImage.style.display = "none";
+  }
+
+  // Clear existing comments
+  commentSection.innerHTML = "";
+
+  // Add comments
+  post.comments.forEach((comment, commentIndex) => {
+    const commentElement = document.createElement("div");
+    commentElement.className = "comment";
+    commentElement.innerHTML = `
+      <p>${comment.content}</p>
+      <small>${comment.date}</small>
+    `;
+
+    // Add delete button for admin
+    if (userRole === "admin") {
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "삭제";
+      deleteButton.addEventListener("click", function () {
+        deleteComment(section, index, commentIndex);
+      });
+      commentElement.appendChild(deleteButton);
+    }
+
+    commentSection.appendChild(commentElement);
+  });
+
+  modal.style.display = "flex";
+}
+
+// Delete Comment
+function deleteComment(section, postIndex, commentIndex) {
+  if (confirm("이 댓글을 삭제하시겠습니까?")) {
+    postsData[section][postIndex].comments.splice(commentIndex, 1);
+    openPostModal(section, postIndex); // Refresh the modal
+  }
+}
+
+// Close Post Modal
+document
+  .getElementById("close-post-modal")
+  .addEventListener("click", function () {
+    document.getElementById("post-modal").style.display = "none";
+    currentPost = null;
+  });
+
+// 게시글 작성 모달 닫기
+document
+  .getElementById("close-write-post")
+  .addEventListener("click", function () {
+    document.getElementById("write-post-modal").style.display = "none";
+  });
+
+// Add Comment
+document
+  .getElementById("add-comment-button")
+  .addEventListener("click", function () {
+    if (!currentPost) return;
+
+    const commentContent = document
+      .getElementById("comment-input")
+      .value.trim();
+    if (commentContent === "") {
+      alert("댓글 내용을 입력해주세요.");
+      return;
+    }
+
+    const now = new Date();
+    const formattedDate = `${now.getFullYear()}-${(now.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")}`;
+
+    const newComment = {
+      content: commentContent,
+      date: formattedDate,
+    };
+
+    postsData[currentPost.section][currentPost.index].comments.push(newComment);
+    document.getElementById("comment-input").value = "";
+    openPostModal(currentPost.section, currentPost.index); // Refresh the modal
+  });
+
+// Open Leave Approval Modal
+function openLeaveApprovalModal(section, index) {
+  const leaveApplication = postsData[section][index];
+  const modal = document.getElementById("leave-approval-modal");
+  const modalContent = document.getElementById("leave-approval-modal-content");
+
+  modalContent.innerHTML = `
+    <h2>휴가 신청 상세 정보</h2>
+    <p><strong>신청 날짜:</strong> ${leaveApplication.date}</p>
+    <p><strong>휴가 유형:</strong> ${
+      leaveApplication.type === "full-day" ? "종일" : "반차"
+    }</p>
+    <p><strong>사유:</strong> ${leaveApplication.reason}</p>
+  `;
+
+  currentApproval.section = section;
+  currentApproval.index = index;
+
+  modal.style.display = "flex";
+}
+
+// Initialize the application
+window.addEventListener("load", function () {
+  setupNavigationHandling();
+  setupSearchFunctionality();
+  setupBoardSearchFunctionality();
+  setupWritePostFunctionality();
+  setupLogoutHandling();
+  setupEnterKeyListeners();
 });

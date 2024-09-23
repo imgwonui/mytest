@@ -65,7 +65,6 @@
   }
 }
 
-
 /* Google Fonts Import for Nanum Gothic and Noto Sans KR */
 @import url("https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap");
 
@@ -777,9 +776,7 @@ footer {
 #post-modal .modal-content button#close-post-modal,
 #comment-modal .modal-content button#close-comment-modal,
 #board-search-modal .modal-content button#close-board-search-modal,
-#leave-application-modal
-  .modal-content
-  button#close-leave-application-modal,
+#leave-application-modal .modal-content button#close-leave-application-modal,
 #leave-approval-modal .modal-content button#close-leave-approval-modal,
 #leave-search-modal .modal-content button#close-leave-search-modal {
   position: absolute;
@@ -1426,4 +1423,63 @@ footer {
 .fc-event-check-out {
   background-color: #dc3545; /* 퇴근: 빨간색 */
   border: none;
+}
+
+/* 세법 태그 선택 섹션 스타일 */
+#tax-tags-section {
+  margin-bottom: 20px;
+}
+
+#tax-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tax-tag {
+  padding: 5px 10px;
+  border: 1px solid #0071e3;
+  border-radius: 20px;
+  background-color: #fff;
+  color: #0071e3;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.tax-tag:hover,
+.tax-tag.selected {
+  background-color: #0071e3;
+  color: #fff;
+}
+
+/* 게시글 태그 스타일 */
+.post-tag {
+  font-size: 12px;
+  background-color: #e6f3ff;
+  color: #0071e3;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-right: 10px;
+}
+
+/* 게시글 레이아웃 조정 */
+.post-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.post-number {
+  flex-shrink: 0;
+}
+
+.post-title-text {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post-details {
+  flex-shrink: 0;
 }

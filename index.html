@@ -98,25 +98,25 @@
                   페이지입니다.
                 </p>
 
-                      <!-- Dashboard Section -->
-      <div class="dashboard">
-        <!-- Recent Notices -->
-        <div class="recent-notices">
-          <h3>최근 업데이트 된 공지사항</h3>
-          <ul id="recent-notices-list">
-            <!-- Recent notices will be injected here -->
-          </ul>
-        </div>
+                <!-- Dashboard Section -->
+                <div class="dashboard">
+                  <!-- Recent Notices -->
+                  <div class="recent-notices">
+                    <h3>최근 업데이트 된 공지사항</h3>
+                    <ul id="recent-notices-list">
+                      <!-- Recent notices will be injected here -->
+                    </ul>
+                  </div>
 
-        <!-- Recent FAQs -->
-        <div class="recent-faq">
-          <h3>최근 업데이트 된 지식 공유 FAQ</h3>
-          <ul id="recent-faq-list">
-            <!-- Recent FAQs will be injected here -->
-          </ul>
-        </div>
-      </div>
-      <!-- End of Dashboard Section -->
+                  <!-- Recent FAQs -->
+                  <div class="recent-faq">
+                    <h3>최근 업데이트 된 지식 공유 FAQ</h3>
+                    <ul id="recent-faq-list">
+                      <!-- Recent FAQs will be injected here -->
+                    </ul>
+                  </div>
+                </div>
+                <!-- End of Dashboard Section -->
               </div>
               <div class="welcome-calendar">
                 <div id="calendar"></div>
@@ -204,15 +204,15 @@
             <div class="pagination" id="leave-applications-pagination"></div>
           </div>
 
-<!-- 출근도장 Section -->
-<div id="attendance" class="section">
-  <h2>출근도장</h2>
-  <div class="attendance-controls">
-    <button id="check-in-button" type="button">출근</button>
-    <button id="check-out-button" type="button">퇴근</button>
-  </div>
-  <div id="attendance-calendar"></div>
-</div>
+          <!-- 출근도장 Section -->
+          <div id="attendance" class="section">
+            <h2>출근도장</h2>
+            <div class="attendance-controls">
+              <button id="check-in-button" type="button">출근</button>
+              <button id="check-out-button" type="button">퇴근</button>
+            </div>
+            <div id="attendance-calendar"></div>
+          </div>
         </main>
       </div>
 
@@ -246,6 +246,47 @@
         <textarea id="post-content" placeholder="내용"></textarea>
         <!-- 이미지 업로드 필드 추가 -->
         <input type="file" id="post-image" accept="image/*" />
+        <!-- 세법 태그 선택 섹션 추가 -->
+        <div id="tax-tags-section" style="display: none">
+          <h3 style="margin-top: 20px">태그 선택 (필수)</h3>
+          <div id="tax-tags" style="margin-top: 10px">
+            <button class="tax-tag" data-tag="인적공제">인적공제</button>
+            <button class="tax-tag" data-tag="연금보험료">연금보험료</button>
+            <button class="tax-tag" data-tag="건강고용보험료">
+              건강고용보험료
+            </button>
+            <button class="tax-tag" data-tag="주택마련저축소득공제">
+              주택마련저축소득공제
+            </button>
+            <button
+              class="tax-tag"
+              data-tag="주택임차차입금 원리금 상환액 공제"
+            >
+              주택임차차입금 원리금 상환액 공제
+            </button>
+            <button
+              class="tax-tag"
+              data-tag="장기주택저당차입금 이자상환액 공제"
+            >
+              장기주택저당차입금 이자상환액 공제
+            </button>
+            <button class="tax-tag" data-tag="월세 세액공제">
+              월세 세액공제
+            </button>
+            <button class="tax-tag" data-tag="신용카드 등">신용카드 등</button>
+            <button class="tax-tag" data-tag="우리사주조합 출연금">
+              우리사주조합 출연금
+            </button>
+            <button class="tax-tag" data-tag="세액감면">세액감면</button>
+            <button class="tax-tag" data-tag="보장성보험료">
+              보장성보험료
+            </button>
+            <button class="tax-tag" data-tag="의료비">의료비</button>
+            <button class="tax-tag" data-tag="교육비">교육비</button>
+            <button class="tax-tag" data-tag="기부금">기부금</button>
+            <button class="tax-tag" data-tag="기타">기타</button>
+          </div>
+        </div>
         <button id="submit-post" type="button">게시</button>
       </div>
     </div>
@@ -270,15 +311,21 @@
     <div id="post-modal">
       <div class="modal-content">
         <button id="close-post-modal" type="button">&times;</button>
-        <h2 class="post-title"></h2>
-        <div class="post-body"></div>
+        <h2 id="post-modal-title" class="post-title"></h2>
+        <small id="post-modal-date"></small>
+        <!-- 이미지 표시를 위한 img 태그 추가 -->
+        <img
+          id="post-modal-image"
+          style="display: none; max-width: 200%; height: auto"
+        />
+        <div id="post-modal-content" class="post-body"></div>
         <div class="comments-section">
           <h3>댓글</h3>
           <div id="comments-list"></div>
           <div class="add-comment">
             <textarea
               id="comment-input"
-              placeholder="댓글을 작성하세요"
+              placeholder="댓글을 작성하세요."
             ></textarea>
             <button id="add-comment-button" type="button">댓글 추가</button>
           </div>
