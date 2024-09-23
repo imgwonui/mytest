@@ -707,6 +707,26 @@ function setupWritePostFunctionality() {
       } else {
         savePost(sectionId, title, content, null, null);
       }
+    } else {
+      // 자료실 외의 게시판인 경우 이미지 업로드 처리
+      if (imageInput.files.length > 0) {
+        const image = imageInput.files[0];
+
+        // 이미지 파일 크기 제한 (예: 10MB)
+        if (image.size > MAX_FILE_SIZE) {
+          alert("업로드할 수 있는 이미지 크기는 10MB를 초과할 수 없습니다.");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = function () {
+          imageData = reader.result;
+          savePost(sectionId, title, content, imageData, null);
+        };
+        reader.readAsDataURL(image);
+      } else {
+        savePost(sectionId, title, content, null, null);
+      }
     }
   });
 
