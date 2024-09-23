@@ -10,10 +10,14 @@ const MAX_ATTEMPTS = 5;
 // Posts Data Structure
 const postsData = {
   notices: [],
-  "tax-search": [],
-  "review-tax-search": [],
-  faq: [],
+  "tax-question-search": [],
+  "system-question-search": [],
+  "review-method-search": [],
+  "knowledge-sharing": [],
+  "data-room": [],
   "leave-applications": [],
+  "meeting-room-applications": [],
+  suggestions: [],
 };
 
 // Initialize Welcome Calendar
@@ -37,10 +41,14 @@ function initializeWelcomeCalendar() {
 // Pagination Data Structure
 const paginationData = {
   notices: 1,
-  "tax-search": 1,
-  "review-tax-search": 1,
-  faq: 1,
+  "tax-question-search": 1,
+  "system-question-search": 1,
+  "review-method-search": 1,
+  "knowledge-sharing": 1,
+  "data-room": 1,
   "leave-applications": 1,
+  "meeting-room-applications": 1,
+  suggestions: 1,
 };
 
 const POSTS_PER_PAGE = 10;
@@ -69,7 +77,7 @@ const attendanceData = {
 // Global variable to store FullCalendar instance
 let attendanceCalendar;
 
-// 전역 변수 추가
+// Variable for selected tax tag
 let selectedTaxTag = null;
 
 // Handle Leave Applications Initialization
@@ -129,7 +137,7 @@ function initializeLeaveApplications() {
       alert("휴가 신청이 완료되었습니다.");
       document.getElementById("leave-application-modal").style.display = "none";
       renderPosts("leave-applications");
-      renderDashboardUpdates(); // 대시보드 업데이트 추가
+      renderDashboardUpdates(); // Update dashboard
     });
 
   // Leave Approval Modal Handling
@@ -152,7 +160,7 @@ function initializeLeaveApplications() {
         alert("휴가 신청이 승인되었습니다.");
         document.getElementById("leave-approval-modal").style.display = "none";
         renderPosts(currentApproval.section);
-        renderDashboardUpdates(); // 대시보드 업데이트 추가
+        renderDashboardUpdates();
         currentApproval = {
           section: null,
           index: null,
@@ -172,7 +180,7 @@ function initializeLeaveApplications() {
         alert("휴가 신청이 거절되었습니다.");
         document.getElementById("leave-approval-modal").style.display = "none";
         renderPosts(currentApproval.section);
-        renderDashboardUpdates(); // 대시보드 업데이트 추가
+        renderDashboardUpdates();
         currentApproval = {
           section: null,
           index: null,
@@ -181,7 +189,7 @@ function initializeLeaveApplications() {
     });
 }
 
-// 전역 변수 선언
+// Variables for Write Post Modal
 let writePostModal;
 let submitPostButton;
 
@@ -189,10 +197,14 @@ let submitPostButton;
 function getSectionName(sectionId) {
   const sectionNames = {
     notices: "공지사항",
-    "tax-search": "세법",
-    "review-tax-search": "검토법",
-    faq: "지식 공유 FAQ",
-    "leave-applications": "휴가신청",
+    "tax-question-search": "세법 질문 검색",
+    "system-question-search": "시스템 질문 검색",
+    "review-method-search": "검토 방법 검색",
+    "knowledge-sharing": "지식 공유",
+    "data-room": "자료실",
+    "leave-applications": "휴가 신청",
+    "meeting-room-applications": "회의실 신청",
+    suggestions: "건의사항",
   };
   return sectionNames[sectionId] || "";
 }
@@ -236,8 +248,8 @@ function renderPosts(section) {
     postNumber.textContent = `#${postsData[section].length - actualIndex}`;
     postTitleDiv.appendChild(postNumber);
 
-    // 세법 게시판의 경우 태그 추가
-    if (section === "tax-search" && post.tag) {
+    // 세법 질문 검색 게시판의 경우 태그 추가
+    if (section === "tax-question-search" && post.tag) {
       const tagSpan = document.createElement("span");
       tagSpan.className = "post-tag";
       tagSpan.textContent = post.tag;
@@ -254,7 +266,7 @@ function renderPosts(section) {
     titleSpan.addEventListener("click", function () {
       openPostModal(section, actualIndex);
     });
-    titleSpan.style.cursor = "pointer"; // 커서 스타일 변경
+    titleSpan.style.cursor = "pointer";
 
     // 상세 정보 (날짜)
     const postDetails = document.createElement("span");
@@ -337,7 +349,7 @@ function renderPosts(section) {
     postsContainer.appendChild(postDiv);
   });
 
-  // Pagination 렌더링
+  // Pagination rendering
   if (totalPages > 1) {
     for (let i = 1; i <= totalPages; i++) {
       const pageButton = document.createElement("button");
@@ -361,11 +373,6 @@ function renderPosts(section) {
       });
       paginationContainer.appendChild(nextButton);
     }
-  }
-
-  // 대시보드 업데이트
-  if (section === "notices" || section === "faq") {
-    renderDashboardUpdates();
   }
 }
 
@@ -398,21 +405,21 @@ function renderDashboardUpdates() {
     recentNoticesList.appendChild(li);
   });
 
-  // Render latest 5 FAQ
-  const sortedFaq = [...postsData.faq].sort(
+  // Render latest 5 knowledge-sharing posts
+  const sortedKnowledge = [...postsData["knowledge-sharing"]].sort(
     (a, b) => b.timestamp - a.timestamp
   );
-  const latestFaq = sortedFaq.slice(0, 5);
-  latestFaq.forEach((post) => {
+  const latestKnowledge = sortedKnowledge.slice(0, 5);
+  latestKnowledge.forEach((post) => {
     const li = document.createElement("li");
     const a = document.createElement("a");
     a.href = "#";
     a.textContent = post.title;
     a.addEventListener("click", function (e) {
       e.preventDefault();
-      // Find the index in postsData.faq
-      const actualIndex = postsData.faq.indexOf(post);
-      openPostModal("faq", actualIndex);
+      // Find the index in postsData["knowledge-sharing"]
+      const actualIndex = postsData["knowledge-sharing"].indexOf(post);
+      openPostModal("knowledge-sharing", actualIndex);
     });
     li.appendChild(a);
     recentFaqList.appendChild(li);
@@ -423,7 +430,7 @@ function renderDashboardUpdates() {
 function openEditModal(section, index) {
   const post = postsData[section][index];
   writePostModal.style.display = "flex";
-  // 스크롤 위치 초기화
+  // Scroll to top
   document.querySelector("#write-post-modal .modal-content").scrollTop = 0;
   document.getElementById("modal-title").textContent = "게시글 수정";
   document.getElementById("post-section").value = section;
@@ -440,7 +447,7 @@ function deletePost(section, index) {
   if (confirm("정말 이 게시글을 삭제하시겠습니까?")) {
     postsData[section].splice(index, 1);
     renderPosts(section);
-    renderDashboardUpdates(); // 대시보드 업데이트 추가
+    renderDashboardUpdates();
   }
 }
 
@@ -516,7 +523,8 @@ function displaySearchResults(results) {
         result.section
       )})</span>`;
       titleButton.addEventListener("click", function () {
-        showSearchResultContent(result);
+        openPostModal(result.section, result.index);
+        modal.style.display = "none";
       });
       resultDiv.appendChild(titleButton);
       resultsContainer.appendChild(resultDiv);
@@ -524,41 +532,6 @@ function displaySearchResults(results) {
   }
 
   modal.style.display = "flex";
-}
-
-function showSearchResultContent(result) {
-  const resultsContainer = document.getElementById("search-results");
-  const backButton = document.getElementById("back-search-results");
-  resultsContainer.innerHTML = `
-                  <h3>${result.title}</h3>
-                  <p>${result.content}</p>
-              `;
-  backButton.style.display = "block";
-
-  backButton.onclick = function () {
-    // Re-display the list of results
-    const currentQuery = document
-      .getElementById("search-input")
-      .value.trim()
-      .toLowerCase();
-    const filteredResults = [];
-    for (const section in postsData) {
-      postsData[section].forEach((post, index) => {
-        if (
-          post.title.toLowerCase().includes(currentQuery) ||
-          post.content.toLowerCase().includes(currentQuery)
-        ) {
-          filteredResults.push({
-            section: section,
-            title: post.title,
-            content: post.content,
-            index: index,
-          });
-        }
-      });
-    }
-    displaySearchResults(filteredResults);
-  };
 }
 
 function setupBoardSearchFunctionality() {
@@ -619,6 +592,7 @@ function displayBoardSearchResults(sectionId, results) {
     titleButton.innerHTML = `<strong>${result.title}</strong>`;
     titleButton.addEventListener("click", function () {
       openPostModal(sectionId, postsData[sectionId].indexOf(result));
+      document.getElementById("board-search-modal").style.display = "none";
     });
     resultDiv.appendChild(titleButton);
     resultsContainer.appendChild(resultDiv);
@@ -629,7 +603,7 @@ function displayBoardSearchResults(sectionId, results) {
 function setupWritePostFunctionality() {
   const writePostButton = document.getElementById("write-post-button");
   writePostModal = document.getElementById("write-post-modal");
-  const closeModalButton = document.getElementById("close-modal");
+  const closeModalButton = document.getElementById("close-write-post");
   submitPostButton = document.getElementById("submit-post");
 
   writePostButton.addEventListener("click", function () {
@@ -648,7 +622,7 @@ function setupWritePostFunctionality() {
   const taxTagsSection = document.getElementById("tax-tags-section");
 
   sectionSelect.addEventListener("change", function () {
-    if (this.value === "tax-search") {
+    if (this.value === "tax-question-search") {
       taxTagsSection.style.display = "block";
     } else {
       taxTagsSection.style.display = "none";
@@ -665,7 +639,7 @@ function setupWritePostFunctionality() {
   });
 
   submitPostButton.addEventListener("click", function () {
-    const sectionId = document.getElementById("post-section").value;
+    let sectionId = document.getElementById("post-section").value;
     const title = document.getElementById("post-title").value.trim();
     const content = document.getElementById("post-content").value.trim();
     const imageInput = document.getElementById("post-image");
@@ -684,7 +658,7 @@ function setupWritePostFunctionality() {
       return;
     }
 
-    if (sectionId === "tax-search" && !selectedTaxTag) {
+    if (sectionId === "tax-question-search" && !selectedTaxTag) {
       alert("세법 게시글의 경우 태그를 선택해주세요.");
       return;
     }
@@ -708,6 +682,13 @@ function setupWritePostFunctionality() {
       .toString()
       .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")}`;
 
+    // 유효한 sectionId인지 확인
+    if (!postsData.hasOwnProperty(sectionId)) {
+      console.error(`유효하지 않은 sectionId: ${sectionId}`);
+      alert("유효하지 않은 게시판 섹션입니다. 다시 시도해주세요.");
+      return;
+    }
+
     if (currentEdit.section && currentEdit.index !== null) {
       // 수정 모드
       const post = postsData[currentEdit.section][currentEdit.index];
@@ -728,7 +709,7 @@ function setupWritePostFunctionality() {
         date: formattedDate,
         comments: [],
         image: imageData,
-        tag: sectionId === "tax-search" ? selectedTaxTag : null,
+        tag: sectionId === "tax-question-search" ? selectedTaxTag : null,
       };
       postsData[sectionId].push(post);
     }
@@ -748,8 +729,8 @@ function clearWritePostModal() {
   document.getElementById("post-title").value = "";
   document.getElementById("post-content").value = "";
   document.getElementById("post-image").value = ""; // Clear image input
-  document.getElementById("post-section").disabled = false; // 추가
-  document.getElementById("tax-tags-section").style.display = "none"; // 추가
+  document.getElementById("post-section").disabled = false;
+  document.getElementById("tax-tags-section").style.display = "none";
 }
 
 // Navigation Handling
@@ -773,31 +754,31 @@ function setupNavigationHandling() {
 
 // Show Section
 function showSection(sectionId) {
-  // 모든 섹션 숨기기
+  // Hide all sections
   const sections = document.querySelectorAll(".section");
   sections.forEach((sec) => {
     sec.classList.remove("active");
   });
 
-  // 선택된 섹션 표시
+  // Show selected section
   const section = document.getElementById(sectionId);
   if (section) {
     section.classList.add("active");
-    // 환영 섹션이 아직 숨겨지지 않았다면 숨기기
+    // Hide welcome section if it's still visible
     document.getElementById("welcome").classList.remove("active");
     if (postsData.hasOwnProperty(sectionId)) {
       renderPosts(sectionId);
     }
-    // 출근도장 섹션인 경우
+    // If attendance section
     if (sectionId === "attendance") {
       initializeAttendanceCalendar();
       if (attendanceCalendar) {
-        attendanceCalendar.updateSize(); // 달력의 크기를 업데이트
+        attendanceCalendar.updateSize();
       }
     }
   }
 
-  // 글쓰기 버튼 표시 여부 업데이트
+  // Update write post button visibility
   updateWritePostButtonVisibility(sectionId);
 }
 
@@ -815,7 +796,10 @@ function updateWritePostButtonVisibility(sectionId) {
       writePostButton.style.display = "none";
     }
   } else if (userRole === "user") {
-    if (sectionId === "faq" || sectionId === "leave-applications") {
+    if (
+      sectionId === "knowledge-sharing" ||
+      sectionId === "leave-applications"
+    ) {
       writePostButton.style.display = "flex";
     } else {
       writePostButton.style.display = "none";
@@ -952,8 +936,6 @@ function setupAttendanceFunctionality() {
 window.addEventListener("DOMContentLoaded", function () {
   const loginButton = document.getElementById("login-button");
   const passwordInput = document.getElementById("password-input");
-  const writePostButtonElement = document.getElementById("write-post-button");
-  const logoutButton = document.getElementById("logout-button");
 
   // Handle Login
   loginButton.addEventListener("click", function () {
@@ -996,15 +978,15 @@ function showMainContent() {
   document.getElementById("main-content").style.display = "flex";
   // Show the welcome section by default
   showWelcome();
-  // Show write post button if admin or user (for FAQ)
+  // Show write post button if admin or user
   if (userRole === "admin" || userRole === "user") {
     document.getElementById("write-post-button").style.display = "flex";
   }
-  // 로그아웃 버튼 표시
+  // Show logout button
   document.getElementById("logout-button").style.display = "block";
   // Initialize Leave Applications
   initializeLeaveApplications();
-  // 초기 출근도장 기능 설정
+  // Initialize attendance functionality
   initializeAttendanceCalendar();
   setupAttendanceFunctionality();
 }
@@ -1013,28 +995,14 @@ function showMainContent() {
 window.addEventListener("load", function () {
   const isLoggedIn = sessionStorage.getItem("login");
   const role = sessionStorage.getItem("role");
-  console.log("로그인 상태:", isLoggedIn);
-  console.log("사용자 역할:", role);
 
   if (isLoggedIn === "true" && (role === "admin" || role === "user")) {
     userRole = role;
-    console.log("사용자 역할 설정:", userRole);
     showMainContent();
   } else {
-    console.log("로그인 화면 표시");
     document.getElementById("login-screen").style.display = "flex";
     document.getElementById("main-content").style.display = "none";
   }
-
-  console.log("DOM 요소 상태:");
-  console.log(
-    "login-screen:",
-    document.getElementById("login-screen").style.display
-  );
-  console.log(
-    "main-content:",
-    document.getElementById("main-content").style.display
-  );
 });
 
 function openBoardSearch(sectionId) {
@@ -1100,9 +1068,9 @@ function openPostModal(section, index) {
     const commentElement = document.createElement("div");
     commentElement.className = "comment";
     commentElement.innerHTML = `
-        <p>${comment.content}</p>
-        <small>${comment.date}</small>
-      `;
+            <p>${comment.content}</p>
+            <small>${comment.date}</small>
+        `;
 
     // Add delete button for admin
     if (userRole === "admin") {
@@ -1134,13 +1102,6 @@ document
   .addEventListener("click", function () {
     document.getElementById("post-modal").style.display = "none";
     currentPost = null;
-  });
-
-// 게시글 작성 모달 닫기
-document
-  .getElementById("close-write-post")
-  .addEventListener("click", function () {
-    document.getElementById("write-post-modal").style.display = "none";
   });
 
 // Add Comment
@@ -1179,13 +1140,13 @@ function openLeaveApprovalModal(section, index) {
   const modalContent = document.getElementById("approval-details");
 
   modalContent.innerHTML = `
-      <h2>휴가 신청 상세 정보</h2>
-      <p><strong>신청 날짜:</strong> ${leaveApplication.date}</p>
-      <p><strong>휴가 유형:</strong> ${
-        leaveApplication.type === "full-day" ? "종일" : "반차"
-      }</p>
-      <p><strong>사유:</strong> ${leaveApplication.reason}</p>
-    `;
+          <h2>휴가 신청 상세 정보</h2>
+          <p><strong>신청 날짜:</strong> ${leaveApplication.date}</p>
+          <p><strong>휴가 유형:</strong> ${
+            leaveApplication.type === "full-day" ? "종일" : "반차"
+          }</p>
+          <p><strong>사유:</strong> ${leaveApplication.reason}</p>
+        `;
 
   currentApproval.section = section;
   currentApproval.index = index;
@@ -1195,10 +1156,5 @@ function openLeaveApprovalModal(section, index) {
 
 // Initialize the application
 window.addEventListener("load", function () {
-  // setupNavigationHandling();
-  // setupSearchFunctionality();
-  // setupBoardSearchFunctionality();
-  // setupWritePostFunctionality();
-  // setupLogoutHandling();
-  // setupEnterKeyListeners();
+  // Functions are already initialized in DOMContentLoaded event
 });
