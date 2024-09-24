@@ -986,6 +986,87 @@ footer {
   transform: translateY(-2px);
 }
 
+/* 인라인 검색창 스타일 */
+/* 카테고리 버튼과 검색창을 같은 라인에 배치 */
+.category-and-search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* 화면이 좁아질 경우 줄바꿈 */
+  gap: 10px; /* 카테고리 버튼과 검색창 간 간격 */
+  margin-bottom: 20px; /* 카테고리 버튼과 게시글 콘텐츠 간 간격 */
+}
+
+/* 인라인 검색창 스타일 */
+.inline-search-bar {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0; /* 검색창이 축소되지 않도록 */
+  gap: 8px; /* 검색창과 버튼 간 간격 추가 */
+}
+
+.inline-search-bar input {
+  width: 180px; /* 검색창 너비를 조금 더 줄임 */
+  padding: 8px 12px; /* 패딩 유지 */
+  border: 1px solid #ccc;
+  border-radius: 8px; /* 전체 모서리 둥글게 조정 */
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.inline-search-bar input:focus {
+  border-color: #0071e3;
+  box-shadow: 0 0 5px rgba(0, 113, 227, 0.5);
+}
+
+.inline-search-bar button {
+  padding: 8px 16px; /* 패딩을 늘려 버튼 크기 조정 */
+  border: none;
+  background-color: #0071e3;
+  color: #fff;
+  border-radius: 8px; /* 버튼 전체 모서리 둥글게 조정 */
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inline-search-bar button i {
+  font-size: 16px; /* 아이콘 크기를 조금 더 키움 */
+}
+
+.inline-search-bar button:hover {
+  background-color: #005bb5;
+  transform: translateY(-2px);
+}
+
+/* Category Buttons Styling */
+.category-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.category-button {
+  padding: 6px 12px;
+  border: 1px solid #0071e3;
+  border-radius: 20px;
+  background-color: #fff;
+  color: #0071e3;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 14px;
+}
+
+.category-button:hover,
+.category-button.active {
+  background-color: #0071e3;
+  color: #fff;
+}
+
 /* Leave Search Modal */
 #leave-search-modal .modal-content .result {
   margin-bottom: 10px;

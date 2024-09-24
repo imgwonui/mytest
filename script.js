@@ -217,25 +217,33 @@ function renderPosts(section) {
   postsContainer.innerHTML = "";
   paginationContainer.innerHTML = "";
 
-  if (postsData[section].length === 0) {
+  let postsToSort = postsData[section];
+
+  // 세법 검색 섹션일 경우 카테고리 필터링 적용
+  if (section === "tax-question-search" && selectedTaxCategory !== "all") {
+    postsToSort = postsToSort.filter(
+      (post) => post.tag === selectedTaxCategory
+    );
+  }
+
+  if (postsToSort.length === 0) {
     emptyMessage.style.display = "block";
     return;
   } else {
     emptyMessage.style.display = "none";
   }
-  // Sort posts by timestamp descending
-  const sortedPosts = postsData[section].sort(
-    (a, b) => b.timestamp - a.timestamp
-  );
+
+  // 포스트를 최신순으로 정렬
+  const sortedPosts = postsToSort.sort((a, b) => b.timestamp - a.timestamp);
 
   const totalPages = Math.ceil(sortedPosts.length / POSTS_PER_PAGE);
   const currentPage = paginationData[section];
 
   const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
   const endIndex = startIndex + POSTS_PER_PAGE;
-  const postsToDisplay = sortedPosts.slice(startIndex, endIndex);
+  const paginatedPosts = sortedPosts.slice(startIndex, endIndex);
 
-  postsToDisplay.forEach((post, index) => {
+  paginatedPosts.forEach((post, index) => {
     const actualIndex = startIndex + index;
     const postDiv = document.createElement("div");
     postDiv.className = "post";
@@ -248,7 +256,7 @@ function renderPosts(section) {
     postNumber.textContent = `#${postsData[section].length - actualIndex}`;
     postTitleDiv.appendChild(postNumber);
 
-    // 세법 질문 검색 게시판의 경우 태그 추가
+    // 세법 검색 게시판의 경우 태그 추가
     if (section === "tax-question-search" && post.tag) {
       const tagSpan = document.createElement("span");
       tagSpan.className = "post-tag";
@@ -1038,6 +1046,9 @@ window.addEventListener("DOMContentLoaded", function () {
   setupBoardSearchFunctionality();
   setupWritePostFunctionality();
   setupLogoutHandling();
+
+  // 카테고리 버튼 초기화
+  setupTaxCategoryButtons();
 });
 
 // Show Main Content after login
@@ -1073,22 +1084,238 @@ window.addEventListener("load", function () {
   }
 });
 
-function openBoardSearch(sectionId) {
-  // Display the board search modal
-  const boardSearchModal = document.getElementById("board-search-modal");
-  boardSearchModal.style.display = "flex";
+// 인라인 검색 기능을 위한 새로운 함수 추가
+function setupInlineSearch() {
+  // 세법 검색 섹션
+  const taxSearchInput = document.getElementById("tax-search-input");
+  const taxSearchButton = document.getElementById("tax-search-button");
 
-  // Set the section ID to the modal
-  boardSearchModal.dataset.sectionId = sectionId;
+  taxSearchButton.addEventListener("click", function () {
+    const query = taxSearchInput.value.trim().toLowerCase();
+    performInlineSearch("tax-question-search", query);
+  });
 
-  // Update the modal title
-  const modalTitle = boardSearchModal.querySelector(".board-search-title");
-  modalTitle.textContent = getSectionName(sectionId) + " 키워드 검색";
+  taxSearchInput.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+      taxSearchButton.click();
+    }
+  });
 
-  // Clear previous input and results
-  document.getElementById("board-search-input").value = "";
-  document.getElementById("board-search-results").innerHTML = "";
+  // 검토 방법 검색 섹션
+  const reviewSearchInput = document.getElementById("review-search-input");
+  const reviewSearchButton = document.getElementById("review-search-button");
+
+  reviewSearchButton.addEventListener("click", function () {
+    const query = reviewSearchInput.value.trim().toLowerCase();
+    performInlineSearch("review-method-search", query);
+  });
+
+  reviewSearchInput.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+      reviewSearchButton.click();
+    }
+  });
 }
+
+// 인라인 검색 수행 함수
+function performInlineSearch(sectionId, query) {
+  if (query === "") {
+    alert("검색어를 입력해주세요.");
+    return;
+  }
+
+  // 선택된 카테고리가 있다면 필터링
+  let filteredPosts = postsData[sectionId].filter((post) => {
+    const matchesQuery =
+      post.title.toLowerCase().includes(query) ||
+      post.content.toLowerCase().includes(query);
+    const matchesCategory =
+      selectedTaxCategory === "all" || post.tag === selectedTaxCategory;
+    return matchesQuery && matchesCategory;
+  });
+
+  // 포스트를 최신순으로 정렬
+  filteredPosts.sort((a, b) => b.timestamp - a.timestamp);
+
+  const postsContainer = document.getElementById(`${sectionId}-posts`);
+  const emptyMessage = document.getElementById(`${sectionId}-empty`);
+  const paginationContainer = document.getElementById(
+    `${sectionId}-pagination`
+  );
+  postsContainer.innerHTML = "";
+  paginationContainer.innerHTML = "";
+
+  if (filteredPosts.length === 0) {
+    emptyMessage.style.display = "block";
+    return;
+  } else {
+    emptyMessage.style.display = "none";
+  }
+
+  const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
+  const currentPage = paginationData[sectionId];
+
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+  const endIndex = startIndex + POSTS_PER_PAGE;
+  const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
+
+  paginatedPosts.forEach((post, index) => {
+    const actualIndex = startIndex + index;
+    const postDiv = document.createElement("div");
+    postDiv.className = "post";
+
+    const postTitleDiv = document.createElement("div");
+    postTitleDiv.className = "post-title";
+
+    const postNumber = document.createElement("span");
+    postNumber.className = "post-number";
+    postNumber.textContent = `#${filteredPosts.length - actualIndex}`;
+    postTitleDiv.appendChild(postNumber);
+
+    // 세법 검색 게시판의 경우 태그 추가
+    if (sectionId === "tax-question-search" && post.tag) {
+      const tagSpan = document.createElement("span");
+      tagSpan.className = "post-tag";
+      tagSpan.textContent = post.tag;
+      postTitleDiv.appendChild(tagSpan);
+    }
+
+    // 제목
+    const titleSpan = document.createElement("span");
+    titleSpan.className = "post-title-text";
+    titleSpan.textContent = post.title;
+    postTitleDiv.appendChild(titleSpan);
+
+    // 제목 클릭 시 모달 열기
+    titleSpan.addEventListener("click", function () {
+      openPostModal(sectionId, index);
+    });
+    titleSpan.style.cursor = "pointer";
+
+    // 상세 정보 (날짜)
+    const postDetails = document.createElement("span");
+    postDetails.className = "post-details";
+    postDetails.textContent = post.date;
+    postTitleDiv.appendChild(postDetails);
+
+    // 이미지 아이콘 표시 (이미지 존재 시)
+    if (post.image) {
+      const imageIcon = document.createElement("i");
+      imageIcon.className = "fas fa-image";
+      imageIcon.title = "이미지 포함 게시글";
+      imageIcon.style.marginLeft = "10px";
+      postTitleDiv.appendChild(imageIcon);
+    }
+
+    // 자료실 게시판의 경우 파일 다운로드 링크 표시
+    if (sectionId === "data-room" && post.file) {
+      const fileLink = document.createElement("a");
+      fileLink.href = post.file;
+      fileLink.download = post.title; // 필요에 따라 파일명 조정 가능
+      fileLink.textContent = "파일 다운로드";
+      fileLink.style.marginLeft = "10px";
+      postTitleDiv.appendChild(fileLink);
+    }
+
+    // 액션 버튼
+    if (userRole === "admin" && sectionId !== "leave-applications") {
+      const postActionsDiv = document.createElement("div");
+      postActionsDiv.className = "post-actions";
+
+      const editButton = document.createElement("button");
+      editButton.type = "button";
+      editButton.innerHTML = '<i class="fas fa-edit"></i>';
+      editButton.title = "수정";
+      editButton.addEventListener("click", function (e) {
+        e.stopPropagation();
+        openEditModal(sectionId, actualIndex);
+      });
+
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+      deleteButton.title = "삭제";
+      deleteButton.addEventListener("click", function (e) {
+        e.stopPropagation();
+        deletePost(sectionId, actualIndex);
+      });
+
+      postActionsDiv.appendChild(editButton);
+      postActionsDiv.appendChild(deleteButton);
+
+      postTitleDiv.appendChild(postActionsDiv);
+    }
+
+    // 휴가신청 섹션의 경우 승인 버튼 추가
+    if (sectionId === "leave-applications" && userRole === "admin") {
+      const approvalButton = document.createElement("button");
+      approvalButton.type = "button";
+      approvalButton.innerHTML = '<i class="fas fa-check"></i>';
+      approvalButton.title = "승인";
+      approvalButton.addEventListener("click", function (e) {
+        e.stopPropagation();
+        openLeaveApprovalModal(sectionId, actualIndex);
+      });
+      postTitleDiv.appendChild(approvalButton);
+    }
+
+    postDiv.appendChild(postTitleDiv);
+
+    postDiv.addEventListener("click", function () {
+      if (sectionId !== "leave-applications") {
+        openPostModal(sectionId, actualIndex);
+      }
+    });
+
+    // 휴가신청 상태 표시
+    if (sectionId === "leave-applications") {
+      const statusSpan = document.createElement("span");
+      statusSpan.className = "post-status";
+      statusSpan.textContent =
+        post.status === "approved" ? "승인 완료" : "승인 전";
+      statusSpan.style.marginLeft = "10px";
+      statusSpan.style.fontWeight = "bold";
+      statusSpan.style.color =
+        post.status === "approved" ? "#28a745" : "#ffc107";
+      postTitleDiv.appendChild(statusSpan);
+    }
+
+    postsContainer.appendChild(postDiv);
+  });
+
+  // Pagination rendering
+  if (totalPages > 1) {
+    for (let i = 1; i <= totalPages; i++) {
+      const pageButton = document.createElement("button");
+      pageButton.textContent = i;
+      if (i === currentPage) {
+        pageButton.classList.add("active");
+      }
+      pageButton.addEventListener("click", function () {
+        paginationData[sectionId] = i;
+        performInlineSearch(sectionId, query);
+      });
+      paginationContainer.appendChild(pageButton);
+    }
+
+    if (currentPage < totalPages) {
+      const nextButton = document.createElement("button");
+      nextButton.textContent = ">";
+      nextButton.addEventListener("click", function () {
+        paginationData[sectionId]++;
+        performInlineSearch(sectionId, query);
+      });
+      paginationContainer.appendChild(nextButton);
+    }
+  }
+}
+
+// 호출 위치: DOMContentLoaded 이벤트 핸들러에 추가
+window.addEventListener("DOMContentLoaded", function () {
+  // 기존 코드...
+
+  setupInlineSearch(); // 인라인 검색 기능 초기화
+});
 
 // Show Welcome Section
 function showWelcome() {
@@ -1194,6 +1421,9 @@ document
     currentPost = null;
   });
 
+// Selected Category for Tax Search
+let selectedTaxCategory = "all";
+
 // Add Comment
 document
   .getElementById("add-comment-button")
@@ -1248,3 +1478,25 @@ function openLeaveApprovalModal(section, index) {
 window.addEventListener("load", function () {
   // Functions are already initialized in DOMContentLoaded event
 });
+
+// Setup Category Buttons for Tax Search
+function setupTaxCategoryButtons() {
+  const categoryButtons = document.querySelectorAll(
+    "#tax-question-search .category-button"
+  );
+  categoryButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      // 모든 버튼에서 active 클래스 제거
+      categoryButtons.forEach((btn) => btn.classList.remove("active"));
+      // 클릭된 버튼에 active 클래스 추가
+      this.classList.add("active");
+      // 선택된 카테고리 가져오기
+      const category = this.getAttribute("data-category");
+      selectedTaxCategory = category;
+      // tax-question-search 섹션의 페이지네이션 초기화
+      paginationData["tax-question-search"] = 1;
+      // 포스트 재렌더링
+      renderPosts("tax-question-search");
+    });
+  });
+}
