@@ -1448,6 +1448,8 @@ footer {
   color: #0071e3;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
+  /* 추가 또는 수정 가능한 스타일 */
+  font-size: 14px; /* 폰트 크기 조정 */
 }
 
 .tax-tag:hover,
