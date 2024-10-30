@@ -16,6 +16,7 @@ function initializeLeaveApplications() {
       enableTime: false,
       dateFormat: "Y-m-d",
       minDate: "today",
+      locale: "ko",
     });
   }
 
@@ -83,6 +84,7 @@ function submitLeaveApplication() {
     status: "대기중",
   };
 
+  const postsData = loadPostsData();
   if (!postsData["leave-applications"]) {
     postsData["leave-applications"] = [];
   }
@@ -95,8 +97,27 @@ function submitLeaveApplication() {
   renderPosts("leave-applications");
 }
 
-// 출근 데이터 저장소
-const attendanceData = {
-  checkIns: {},
-  checkOuts: {}
-};
+// 게시물 데이터 불러오기
+function loadPostsData() {
+  const data = localStorage.getItem("postsData");
+  return data ? JSON.parse(data) : defaultPostsData;
+}
+
+// 게시물 데이터 저장
+function savePostsData(data) {
+  localStorage.setItem("postsData", JSON.stringify(data));
+}
+
+// 페이징 데이터 불러오기
+function loadPaginationData() {
+  const data = localStorage.getItem("paginationData");
+  return data ? JSON.parse(data) : defaultPaginationData;
+}
+
+// 페이징 데이터 저장
+function savePaginationData(data) {
+  localStorage.setItem("paginationData", JSON.stringify(data));
+}
+
+// 전역 변수 초기화
+// 중복 선언된 selectedTaxTag 제거

@@ -52,12 +52,6 @@ let currentApproval = {
   index: null,
 };
 
-// 출석 데이터 구조
-const attendanceData = {
-  checkIns: {}, // { 'YYYY-MM-DD': 'HH:MM' }
-  checkOuts: {}, // { 'YYYY-MM-DD': 'HH:MM' }
-};
-
 // 전역 FullCalendar 인스턴스
 let attendanceCalendar;
 
@@ -126,6 +120,7 @@ function setPage(sectionId, page) {
 function showMainContent() {
   document.getElementById("login-screen").style.display = "none";
   document.getElementById("main-content").style.display = "flex";
+  document.querySelector("header").style.display = "flex"; // header 표시
 
   // 모든 섹션 숨기기
   document.querySelectorAll(".section").forEach((section) => {
@@ -168,6 +163,7 @@ function setupLogoutHandling() {
           document.getElementById("main-content").style.display = "none";
           document.getElementById("login-screen").style.display = "flex";
           document.getElementById("write-post-button").style.display = "none";
+          document.querySelector("header").style.display = "none";
 
           // 로그인 입력 필드 초기화
           document.getElementById("password-input").value = "";
@@ -183,6 +179,11 @@ function setupLogoutHandling() {
     });
   }
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+  setupLogoutHandling();
+  // 다른 초기화 코드...
+});
 
 // 엔터 키로 제출 허용
 function setupEnterKeyListeners() {
@@ -206,6 +207,7 @@ window.addEventListener("load", () => {
   } else {
     document.getElementById("login-screen").style.display = "flex";
     document.getElementById("main-content").style.display = "none";
+    document.querySelector("header").style.display = "none";
   }
 });
 
@@ -244,8 +246,35 @@ window.addEventListener("DOMContentLoaded", () => {
   setupNavigationHandling();
   setupSearchFunctionality();
   setupBoardSearchFunctionality();
-  setupWritePostFunctionality();
   setupLogoutHandling();
   setupTaxCategoryButtons();
   setupInlineSearch();
+});
+
+function setupWritePostFunctionality() {
+  const writePostButtons = document.querySelectorAll(".tax-write-post-btn");
+  writePostButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const currentSection = button.closest(".section");
+      if (currentSection) {
+        const sectionId = currentSection.id;
+        if (sectionId === "leave-applications") {
+          openLeaveModal();
+        }
+      }
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const passwordInput = document.getElementById("password-input");
+  const loginButton = document.getElementById("login-button");
+
+  passwordInput.addEventListener("input", function () {
+    if (this.value.length > 0) {
+      loginButton.classList.add("has-input");
+    } else {
+      loginButton.classList.remove("has-input");
+    }
+  });
 });

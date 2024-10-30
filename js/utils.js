@@ -50,7 +50,7 @@ function savePostsData(data) {
 
 function loadPostsData() {
   const data = localStorage.getItem("postsData");
-  return data ? JSON.parse(data) : {};
+  return data ? JSON.parse(data) : defaultPostsData;
 }
 
 function savePaginationData(data) {

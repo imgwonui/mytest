@@ -184,3 +184,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+function initializeLeaveApplications() {
+  const leaveDate = document.getElementById("leave-date");
+  if (leaveDate) {
+    flatpickr(leaveDate, {
+      enableTime: false,
+      dateFormat: "Y-m-d",
+      minDate: "today",
+      locale: "ko",
+    });
+  }
+}

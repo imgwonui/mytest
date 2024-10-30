@@ -84,21 +84,34 @@ function filterPostsByCategory(section, category) {
     return;
   }
 
+  const container = document.getElementById(section);
+  const searchInput = container.querySelector(".tax-search-input");
+  const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+
+  let filteredPosts;
+
   if (category === "전체") {
-    // 전체 게시글 표시
-    renderPosts(section);
-    return;
+    filteredPosts = postsData[section];
+    if (query) {
+      filteredPosts = filteredPosts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(query) ||
+          post.content.toLowerCase().includes(query)
+      );
+    }
+  } else {
+    filteredPosts = postsData[section].filter((post) => {
+      const matchesCategory = post.tag === category;
+      const matchesQuery =
+        !query ||
+        post.title.toLowerCase().includes(query) ||
+        post.content.toLowerCase().includes(query);
+      return matchesCategory && matchesQuery; // 여기에 return 추가
+    });
   }
 
-  // 선택된 카테고리에 해당하는 게시글만 필터링
-  const filteredPosts = postsData[section].filter(
-    (post) => post.tag === category
-  );
-
-  // 필터링된 결과 표시
-  renderPosts(section, filteredPosts);
+  renderPosts(section, filteredPosts); // 필터링된 결과를 화면에 표시
 }
-
 // DOM이 로드되면 기능 초기화
 document.addEventListener("DOMContentLoaded", () => {
   setupTaxCategoryButtons();

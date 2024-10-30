@@ -126,6 +126,7 @@ function updateAttendanceStatus(isCheckedIn, isCheckedOut) {
     }
   }
 }
+
 // 출근도장 섹션의 출퇴근 버튼 기능
 function setupSectionAttendanceButtons() {
   const sectionCheckIn = document.getElementById("section-check-in");
@@ -153,6 +154,7 @@ function handleNavAttendance() {
     });
   }
 }
+
 // 공통 출퇴근 처리 함수
 async function handleAttendance(action) {
   const today = new Date();
@@ -289,3 +291,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+// 출석 데이터 초기화
+let attendanceData = {
+  checkIns: {},
+  checkOuts: {},
+};

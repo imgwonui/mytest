@@ -1,5 +1,3 @@
-// 게시글 작성 기능 (전체 파일)
-
 document.addEventListener("DOMContentLoaded", () => {
   const postForm = document.getElementById("post-form");
   const postSection = document.getElementById("post-section");
@@ -26,11 +24,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // 태그 선택 이벤트
-  taxTags.forEach((tag) => {
-    tag.addEventListener("click", () => {
-      taxTags.forEach((t) => t.classList.remove("selected"));
-      tag.classList.add("selected");
-      selectedTag = tag.getAttribute("data-tag");
+  tagButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      tagButtons.forEach((btn) => btn.classList.remove("selected"));
+      button.classList.add("selected");
+      selectedTag = button.textContent.trim(); // textContent로 변경하고 trim() 추가
     });
   });
 

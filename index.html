@@ -46,20 +46,33 @@
     <script src="js/initialize.js"></script>
     <script src="integratedSearch.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
   </head>
   <body>
     <!-- Login Screen -->
     <div id="login-screen">
-      <div id="login-box">
-        <h2>Payday WorkHub</h2>
+      <div class="login-layout">
+        <img src="로고2.png" alt="회사 로고" class="login-logo" />
+        <h1 class="login-title">연말정산 Workhub</h1>
         <input
           type="password"
           id="password-input"
+          class="login-input"
           placeholder="비밀번호를 입력하세요"
         />
-        <button id="login-button" type="button">접속</button>
-        <p id="login-error" style="display: none">잘못된 비밀번호입니다.</p>
-        <p id="lockout-message" style="display: none">
+        <button id="login-button" type="button" class="login-button">
+          로그인
+        </button>
+        <div class="info-box">
+          <img src="전구아이콘.png" alt="정보" class="info-icon" />
+          <span class="info-text"
+            >업무에 필요한 정보를 공유하는 페이지입니다.</span
+          >
+        </div>
+        <p id="login-error" class="login-error" style="display: none">
+          잘못된 비밀번호입니다.
+        </p>
+        <p id="lockout-message" class="login-error" style="display: none">
           로그인 시도가 너무 많아 잠겼습니다. 잠시 후 다시 시도해주세요.
         </p>
       </div>
