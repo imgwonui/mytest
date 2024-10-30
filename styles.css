@@ -331,6 +331,11 @@ body {
   margin-bottom: 20px;
   font-family: Pretendard;
   transition: background-color 0.3s ease;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19.09px;
+  color: #91989f; /* 글씨 색상 추가 */
 }
 
 .login-button:hover {
