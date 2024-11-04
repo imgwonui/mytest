@@ -807,6 +807,7 @@ main {
   padding: 0;
   box-shadow: none;
   min-height: auto;
+  max-height: fit-content;
 }
 
 /* 애니메이션 효과 */
