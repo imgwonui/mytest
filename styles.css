@@ -764,7 +764,6 @@ main {
 }
 
 #attendance.section.other-section .tax-search-header {
-  width: 1240px;
   margin: 40px 150px 0px auto;
 }
 
@@ -780,12 +779,12 @@ main {
   width: 100%;
   max-width: 1700px;
   margin: 0 auto;
-  min-height: calc(100vh - 50px); /* 헤더(56px) + 패딩(40px*2) 제외 */
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   padding: 32px;
   box-sizing: border-box;
+  height: 100000px;
 }
 
 /* 섹션 활성화 스타일 */
@@ -841,7 +840,7 @@ main {
   display: flex;
 }
 
-/* 모달 컨텐츠 스��일 */
+/* 모달 컨텐츠 스일 */
 .modal-content {
   background: #fff;
   padding: 32px;
@@ -1614,8 +1613,8 @@ footer {
 
 .comments-section h3 {
   margin-bottom: 10px;
-  color: #0071e3;
-  font-size: 20px;
+  color: #26282b;
+  font-size: 18px;
 }
 
 .comment {
@@ -1688,7 +1687,7 @@ footer {
   display: flex;
   width: 738px;
   gap: 12px;
-  padding: 16px 0;
+  padding: 8px 0 16px;
   border-bottom: 1px solid #dce2e8;
 }
 
@@ -2054,11 +2053,10 @@ footer {
 .post-tag {
   display: inline-block;
   padding: 4px 12px;
-  border-radius: 20px;
-  background-color: #f8f9fa;
-  color: #007aff;
+  color: #73787e;
   margin: 8px 0;
   font-size: 14px;
+  width: 100px;
 }
 
 .post-content {
@@ -2179,7 +2177,7 @@ footer {
 .comment-submit-btn {
   white-space: nowrap;
   padding: 8px 16px;
-  background: #0071e3;
+  background: #6a4ced;
   color: white;
   border: none;
   border-radius: 8px;
@@ -2872,7 +2870,7 @@ header {
   gap: 8px;
   align-self: stretch;
   border-radius: 8px;
-  background: var(--foundation-blue-normal-primary, #845afb);
+  background: var(--foundation-blue-normal-primary, #6a4ced);
   color: white;
   border: none;
   cursor: pointer;
@@ -2885,11 +2883,11 @@ header {
 }
 
 .check-in-button.check-out {
-  background-color: #845afb;
+  background-color: #6a4ced;
 }
 
 .check-in-button.check-out:hover {
-  background-color: #845afb;
+  background-color: #6a4ced;
 }
 
 .status-text {
@@ -3074,7 +3072,7 @@ header {
 
 .tax-search-input {
   display: flex;
-  width: 600px;
+  width: 552px;
   height: 40px;
   padding: 8px 16px;
   align-items: center;
@@ -3083,9 +3081,33 @@ header {
   font-size: 16px;
 }
 
+.tax-search-input::placeholder,
+.review-search-input::placeholder,
+.system-search-input::placeholder,
+.search-input::placeholder {
+  font-family: Pretendard;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 17.9px;
+  text-align: left;
+  color: #91989f;
+}
+
+/* input 자체의 스타일도 수정 */
+.tax-search-input,
+.review-search-input,
+.system-search-input,
+.search-input {
+  font-family: Pretendard;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 17.9px;
+  text-align: left;
+}
+
 .tax-search-button {
   border-radius: 40px;
-  background: var(--foundation-blue-normal-primary, #007aff);
+  background: var(--foundation-blue-normal-primary, #26282b);
   display: flex;
   width: 40px;
   height: 40px;
@@ -3121,15 +3143,18 @@ header {
 }
 
 .tax-category-btn.active {
-  background: var(--Foundation-Black-black-8, #464c52);
+  background: var(--Foundation-Black-black-8, #6a4ced);
   color: white;
   border: none;
 }
 
 /* 게시판 영역 */
 .tax-board-container {
-  margin-top: 51.5px;
   width: 1248px;
+}
+
+#tax-question-search .tax-board-container {
+  margin-top: 51.5px;
 }
 
 .search-icon {
@@ -3242,7 +3267,6 @@ header {
 .post-date {
   color: #73787e;
   font-size: 14px;
-  margin-top: 16px;
 }
 
 .post-file {
@@ -3299,7 +3323,7 @@ header {
 
 /* 게시글 카테고리 스타일 추가 */
 .post-category {
-  color: #007aff;
+  color: #6a4ced;
   margin-right: 5px;
   margin-bottom: 15px;
   display: inline-block;
@@ -3486,7 +3510,7 @@ header {
 
 .header-no {
   width: 80px;
-  padding-left: 5px;
+  padding-right: 30px;
 }
 
 .header-category {
@@ -3556,4 +3580,2345 @@ header {
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
+}
+
+/* Welcome Bar 레이아웃 */
+.welcome-bar-container {
+  position: absolute;
+  width: 1345px;
+  height: 115px;
+  top: 78px;
+  left: 355px;
+  border-radius: 12px;
+  background: #e6e4ff;
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px;
+}
+
+#welcome.active ~ .welcome-bar-container {
+  display: flex;
+}
+
+.welcome-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.welcome-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.welcome-title {
+  font-family: "Roboto", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 39.2px;
+  color: #100a55;
+  margin: 0;
+}
+
+.welcome-clap {
+  width: 32px;
+  height: 32px;
+}
+
+.welcome-subtitle {
+  font-family: "Pretendard", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  color: #887cb7;
+  margin: 0;
+}
+
+.welcome-pig {
+  width: 105px;
+  height: 129px;
+  margin-right: 82px;
+  margin-top: -30px; /* 8px 위로 올리기 위해 음수 마진 추가 */
+}
+
+.home-layout-container {
+  display: none;
+  position: absolute;
+  width: 100%;
+  margin-top: 20px;
+  gap: 20px;
+}
+
+/* welcome 섹션이 활성화될 때만 home-layout-container 표시 */
+#welcome.active ~ .home-layout-container {
+  display: flex;
+}
+
+.home-notice-bar {
+  position: fixed;
+  width: 505px;
+  height: 344px;
+  top: 220px; /* welcome-bar 아래로 조정 */
+  left: 355px; /* nav와 동일선상 */
+  padding: 24px 32px;
+  gap: 10px;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.home-knowledge-bar {
+  position: fixed;
+  width: 400px;
+  height: 344px;
+  top: 220px;
+  left: 880px; /* notice-bar + 20px gap */
+  padding: 24px;
+  gap: 10px;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.home-data-bar {
+  position: fixed;
+  width: 400px;
+  height: 344px;
+  top: 220px;
+  left: 1300px; /* knowledge-bar + 20px gap */
+  padding: 24px;
+  gap: 10px;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+/* 홈 화면 하단 레이아웃 컨테이너 */
+.home-bottom-layout-container {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  top: 510px; /* home-layout-container + 20px margin */
+}
+
+/* 오늘의 정보 레이아웃 */
+.todayinfo {
+  position: fixed;
+  width: 505px;
+  height: 345px;
+  left: 355px;
+  padding: 24px 32px;
+  gap: 10px;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+/* 웰컴 캘린더 레이아웃 */
+.welcomecalendar {
+  position: fixed;
+  width: 820px;
+  height: 345px !important;
+  left: 880px;
+  top: 586px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.welcomecalendar .fc-view-harness {
+  height: 280px !important; /* 220px에서 280px로 변경 */
+  width: 100% !important;
+}
+
+.welcomecalendar .fc-header-toolbar {
+  margin-bottom: 0.5em !important;
+}
+
+.welcomecalendar .fc-daygrid-body {
+  height: 100% !important;
+  height: 100% !important;
+}
+
+.welcomecalendar .fc-toolbar-title {
+  font-size: 16px !important;
+}
+
+.notice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.welcomecalendar .fc-scrollgrid {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.welcomecalendar .fc-scrollgrid-sync-table {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.welcomecalendar .fc-daygrid-body table {
+  width: 100% !important;
+}
+
+.notice-title-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notice-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.notice-title {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22.4px;
+  color: #26282b;
+  margin: 0;
+}
+
+.notice-view-all {
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.71px;
+  color: #73787e;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.notice-content {
+  width: 441px;
+  height: 159px;
+  margin-bottom: 32px;
+}
+
+.notice-date {
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.71px;
+  color: #91989f;
+  margin-bottom: 16px;
+}
+
+.notice-post-title {
+  font-family: Pretendard;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 26.25px;
+  color: #26282b;
+  margin: 0 0 32px 0;
+}
+
+.notice-post-content {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26.4px;
+  letter-spacing: -0.02em;
+  color: #363a3e;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0;
+}
+
+.notice-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notice-dots {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  height: 6px; /* dot의 최대 높이에 맞춤 */
+}
+
+.notice-dots .dot {
+  width: 6px;
+  height: 6px;
+  background-color: #e9e4fc;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.notice-dots .dot.active {
+  width: 20px;
+  background-color: #6a4ced;
+  border-radius: 20px;
+}
+
+.notice-buttons {
+  display: flex;
+  border: 1px solid #dce2e8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.notice-prev-btn,
+.notice-next-btn {
+  width: 32px;
+  height: 32px;
+  background: #ffffff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #73787e;
+  font-size: 24px;
+  padding: 0;
+}
+
+.notice-prev-btn {
+  border-right: 1px solid #dce2e8;
+}
+
+.notice-prev-btn:active,
+.notice-next-btn:active {
+  background: #e5e8eb;
+}
+
+.notice-prev-btn:hover,
+.notice-next-btn:hover {
+  opacity: 0.9;
+  background: #f3f4f5;
+}
+
+/* 홈 지식공유/자료실 공통 스타일 */
+.home-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.home-section-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.home-section-title {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22.4px;
+  color: #26282b;
+  margin: 0;
+}
+
+.home-post-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-post-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f2f4f6;
+  height: 46px;
+}
+
+.home-post-title {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  text-align: left;
+  color: #26282b;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70%;
+}
+
+.home-post-info {
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.71px;
+  text-align: left;
+  color: #73787e;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.download-icon {
+  width: 13.5px;
+  height: 13.5px;
+  margin-right: 16px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.view-more-button {
+  width: 100%;
+  height: 40px;
+  padding: 10px 0;
+  background: #ebeff3;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  color: #73787e;
+  margin-top: 16px;
+}
+
+/* 통합캘린더 섹션 스타일 */
+.todayinfo {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+}
+
+.todayinfo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 변경된 부분 */
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.todayinfo-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.todayinfo-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.todayinfo-title {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22.4px;
+  color: #26282b;
+  margin: 0;
+}
+
+.todayinfo-content {
+  display: flex;
+  width: 457px;
+  height: 266px;
+  gap: 40px;
+}
+
+.todayinfo-left {
+  width: 140px;
+}
+
+.create-schedule-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  width: 90px;
+  height: 32px;
+  border: 1px solid #dce2e8;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.create-schedule-btn .plus-icon {
+  color: #6a4ced;
+  font-size: 16px;
+  padding-top: 1px;
+  font-weight: 600;
+}
+
+.create-schedule-btn .btn-text {
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16.71px;
+  color: #464c52;
+}
+
+.today-date {
+  font-family: Pretendard;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 45.35px;
+  color: #26282b;
+}
+
+.today-day {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22.4px;
+  color: #363a3e;
+}
+
+.todayinfo-right {
+  flex: 1;
+}
+
+.schedule-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 20px;
+}
+
+.schedule-title {
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16.71px;
+  color: #91989f;
+}
+
+.schedule-count {
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16.71px;
+  color: #6a4ced;
+}
+
+.schedule-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.schedule-item {
+  width: 317px;
+  height: 47px;
+  display: flex;
+  align-items: center;
+  padding: 12px 12px 27px 12px; /* padding-bottom을 27px로 수정 */
+  border-bottom: 1px solid #ebeff3;
+  margin-bottom: 15px; /* margin-bottom 추가 */
+  position: relative; /* position 추가 */
+}
+
+.schedule-color-block {
+  width: 4px;
+  height: 20px;
+  background: #f691b2;
+  border-radius: 13px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+.schedule-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.schedule-name {
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 21.48px;
+  color: #363a3e;
+}
+
+.schedule-location {
+  font-family: Pretendard;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 17.9px;
+  text-align: left;
+  color: #91989f;
+  margin-top: 5px;
+}
+
+/* 웰컴 캘린더 전용 스타일 */
+.welcome-calendar .fc {
+  background: #ffffff;
+  height: 100%;
+}
+
+.welcome-calendar .fc .fc-button-group {
+  width: 64px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  overflow: hidden;
+  margin-right: 8px !important;
+  align-items: center !important;
+}
+
+.welcome-calendar .fc-prev-button,
+.welcome-calendar .fc-next-button {
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  background: #ffffff !important;
+  border: none !important;
+  color: #464c52 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.welcome-calendar .fc-today-button {
+  width: 50px !important;
+  height: 32px !important;
+  padding: 6px 10px !important;
+  border-radius: 8px !important;
+  border: 1px solid #dce2e8 !important;
+  background: transparent !important;
+  font-family: Pretendard !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 16.71px !important;
+  color: #26282b !important;
+}
+
+.welcome-calendar .fc-daygrid-day {
+  height: 35px !important;
+}
+
+.welcome-calendar .fc-daygrid-day-frame {
+  height: 100% !important;
+}
+
+.welcomecalendar .fc .fc-toolbar {
+  margin-bottom: 1em !important;
+}
+
+.welcomecalendar .fc {
+  width: 100%;
+  height: 100%;
+}
+
+.welcomecalendar .fc .fc-button-group {
+  width: 64px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  overflow: hidden;
+  margin-right: 8px !important;
+}
+
+.welcomecalendar .fc-prev-button,
+.welcomecalendar .fc-next-button {
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  background: #ffffff !important;
+  border: none !important;
+  color: #464c52 !important;
+}
+
+.welcomecalendar .fc-button-group {
+  height: 32px !important;
+}
+
+.welcomecalendar .fc-today-button {
+  width: 50px !important;
+  height: 32px !important;
+  padding: 6px 10px !important;
+  border-radius: 8px !important;
+  border: 1px solid #dce2e8 !important;
+  background: transparent !important;
+  font-family: Pretendard !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 16.71px !important;
+  color: #26282b !important;
+}
+
+.welcomecalendar .fc-daygrid-day {
+  height: 35px !important;
+}
+
+.welcomecalendar .fc-daygrid-day-frame {
+  height: 100% !important;
+}
+
+.welcomecalendar .fc-daygrid-day-number {
+  font-weight: 400 !important; /* 기본 폰트 굵기로 변경 */
+  font-family: Pretendard !important;
+  font-size: 14px !important;
+  color: #26282b !important;
+  text-decoration: none !important;
+}
+
+.welcomecalendar .fc-day-today .fc-daygrid-day-number {
+  font-weight: 400 !important; /* 오늘 날짜도 기본 굵기로 설정 */
+}
+
+.quick-links-container {
+  position: fixed;
+  width: 93px;
+  height: 520px;
+  top: 78px;
+  left: 1720px;
+  padding: 24px 16px;
+  gap: 26px;
+  border-radius: 12px;
+  background: #ffffff;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+#welcome.active ~ .quick-links-container {
+  display: flex;
+}
+
+.quick-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  width: 100%;
+}
+
+.quick-link-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.quick-link-text {
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.71px;
+  text-align: center;
+  color: #73787e;
+}
+
+.quick-link:hover .quick-link-text {
+  color: #007aff;
+}
+
+/* 지식공유 섹션 전용 스타일 */
+.knowledge-sharing-container {
+  position: relative;
+  width: 100%;
+  padding: 20px;
+  width: 1240px;
+  margin: 0 210px 0 auto;
+}
+
+.knowledge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 11px;
+  width: 1240px;
+}
+
+.knowledge-search-box {
+  position: relative;
+  display: inline-block;
+}
+
+.knowledge-search-input {
+  width: 240px;
+  height: 40px;
+  padding: 12px 18px;
+  padding-right: 50px;
+  border-radius: 44px;
+  border: 1px solid #e5e8eb;
+  font-family: Pretendard;
+  font-size: 14px;
+  margin-right: 58px;
+}
+
+.knowledge-search-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.knowledge-search-button {
+  position: absolute;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.knowledge-description {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+
+.knowledge-bulb-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.knowledge-desc-text {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22.4px;
+  color: #91989f;
+}
+
+.knowledge-list-header {
+  width: 1240px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #26282b;
+  background: #f3f4f5; /* 배경색 추가 */
+  margin-top: 50px;
+}
+
+.knowledge-no {
+  width: 70px;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  text-align: center;
+  color: #73787e;
+}
+
+.knowledge-title {
+  flex: 1;
+  margin: 0 32px;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  text-align: left;
+  color: #363a3e;
+}
+
+.knowledge-time {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 16.71px;
+  text-align: left;
+  color: #91989f;
+}
+
+.knowledge-post {
+  width: 1240px;
+  height: 62px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e5e8eb;
+}
+
+.knowledge-write-btn {
+  position: absolute;
+  bottom: 20px;
+  display: flex;
+  right: -20px; /* padding을 상쇄하기 위해 음수 값 사용 */
+  align-items: center;
+  gap: 4px;
+  width: 112px;
+  height: 36px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #f3f4f5;
+  border: 1px solid #f3f4f5;
+  cursor: pointer;
+}
+
+.knowledge-write-icon {
+  width: 12.14px;
+  height: 12.14px;
+}
+
+.knowledge-write-text {
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.71px;
+  color: #464c52;
+}
+
+.knowledge-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  width: 1240px;
+}
+
+.knowledge-pagination button {
+  padding: 8px 12px;
+  border: 1px solid #e5e8eb;
+  background: none;
+  cursor: pointer;
+}
+
+.knowledge-search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.knowledge-list-header .knowledge-title {
+  flex: 1;
+  margin: 0 0px 0 65px;
+  text-align: center;
+  color: #73787e;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+}
+
+.knowledge-post .knowledge-title {
+  flex: 1;
+  margin: 0 32px;
+  text-align: left;
+  color: #73787e;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.home-post-item .post-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 270px; /* 또는 원하는 최대 너비 */
+}
+
+/* 공지사항, 자료실, 지식공유 공통 스타일 */
+.knowledge-sharing-container,
+.notices-container,
+.data-room-container {
+  position: relative;
+  width: 100%;
+  padding: 20px;
+  width: 1240px;
+  margin: 0 210px 0 auto;
+}
+
+.knowledge-header,
+.notices-header,
+.data-room-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 11px;
+  width: 1240px;
+}
+
+.knowledge-search-wrapper,
+.notices-search-wrapper,
+.data-room-search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.knowledge-search-input,
+.notices-search-input,
+.data-room-search-input {
+  width: 240px;
+  height: 40px;
+  padding: 12px 18px;
+  padding-right: 50px;
+  border-radius: 44px;
+  border: 1px solid #e5e8eb;
+  font-family: Pretendard;
+  font-size: 14px;
+  margin-right: 58px;
+}
+
+.knowledge-search-button,
+.notices-search-button,
+.data-room-search-button {
+  position: absolute;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.knowledge-search-icon,
+.notices-search-icon,
+.data-room-search-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.knowledge-description,
+.notices-description,
+.data-room-description {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+
+.knowledge-bulb-icon,
+.notices-bulb-icon,
+.data-room-bulb-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.knowledge-desc-text,
+.notices-desc-text,
+.data-room-desc-text {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22.4px;
+  color: #91989f;
+}
+
+.knowledge-list-header,
+.notices-list-header,
+.data-room-list-header {
+  width: 1240px;
+  height: 46px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #26282b;
+  background: #f3f4f5;
+  margin-top: 50px;
+}
+
+.knowledge-post,
+.notices-post,
+.data-room-post {
+  width: 1240px;
+  height: 62px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e5e8eb;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* 헤더의 제목 스타일 (중앙 정렬) */
+.knowledge-list-header .knowledge-title,
+.notices-list-header .notices-title,
+.data-room-list-header .data-room-title {
+  flex: 1;
+  margin: 0 32px;
+  text-align: center;
+  color: #73787e;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+}
+
+/* 게시글의 제목 스타일 (왼쪽 정렬) */
+.knowledge-post .knowledge-title,
+.notices-post .notices-title,
+.data-room-post .data-room-title {
+  flex: 1;
+  margin: 0 32px;
+  text-align: left;
+  color: #363a3e;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.knowledge-title,
+.notices-title,
+.data-room-title {
+  flex: 1;
+  margin: 0 32px;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  text-align: left;
+  color: #363a3e;
+}
+/* 시간 표시 스타일 통일 */
+.knowledge-time,
+.notices-time,
+.data-room-time {
+  width: 120px;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.71px;
+  text-align: center;
+  color: #91989f;
+  padding-left: 20px;
+}
+.knowledge-post,
+.notices-post,
+.data-room-post {
+  display: flex;
+  padding: 16px 0;
+  border-bottom: 1px solid #e5e8eb;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.knowledge-post:hover,
+.notices-post:hover,
+.data-room-post:hover {
+  background-color: #f8f9fa;
+}
+
+.knowledge-write-btn,
+.notices-write-btn,
+.data-room-write-btn {
+  position: absolute;
+  bottom: 20px;
+  display: flex;
+  right: -20px;
+  align-items: center;
+  gap: 4px;
+  width: 112px;
+  height: 36px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #f3f4f5;
+  border: 1px solid #f3f4f5;
+  cursor: pointer;
+}
+
+.knowledge-write-icon,
+.notices-write-icon,
+.data-room-write-icon {
+  width: 12.14px;
+  height: 12.14px;
+}
+
+.knowledge-write-text,
+.notices-write-text,
+.data-room-write-text {
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.71px;
+  color: #464c52;
+}
+
+.knowledge-pagination,
+.notices-pagination,
+.data-room-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  width: 1240px;
+}
+
+.knowledge-pagination button,
+.notices-pagination button,
+.data-room-pagination button {
+  padding: 8px 12px;
+  border: 1px solid #e5e8eb;
+  background: none;
+  cursor: pointer;
+}
+
+.notices-post,
+.data-room-post {
+  display: flex;
+  align-items: left;
+  padding: 20px 16px;
+  border-bottom: 1px solid var(--Foundation-Black-black-3, #ebeff3);
+  cursor: pointer;
+}
+
+.notices-post:hover,
+.data-room-post:hover {
+  background-color: var(--Foundation-Black-black-2, #f3f4f5);
+}
+/* 번호 스타일 통일 */
+.knowledge-no,
+.notices-no,
+.data-room-no {
+  width: 50px;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  text-align: center;
+  color: #73787e;
+}
+
+/* 공지사항 섹션 스타일 */
+.notices-container {
+  position: relative;
+  width: 100%;
+  padding: 20px;
+  width: 1240px;
+  margin: 0 210px 0 auto;
+}
+
+.notices-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 11px;
+  width: 1240px;
+}
+
+.notices-list-header {
+  width: 1240px;
+  height: 46px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #26282b;
+  background: #f3f4f5;
+  margin-top: 50px;
+}
+
+.notices-post {
+  width: 1240px;
+  height: 62px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: left;
+  border-bottom: 1px solid #e5e8eb;
+}
+
+/* 자료실 섹션 스타일 */
+.data-room-container {
+  position: relative;
+  width: 100%;
+  padding: 20px;
+  width: 1240px;
+  margin: 0 210px 0 auto;
+}
+
+.data-room-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 11px;
+  width: 1240px;
+}
+
+.data-room-list-header {
+  width: 1240px;
+  height: 46px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #26282b;
+  background: #f3f4f5;
+  margin-top: 50px;
+}
+
+.data-room-post {
+  width: 1240px;
+  height: 62px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e5e8eb;
+}
+
+/* 공통 호버 효과 */
+.notices-post:hover,
+.data-room-post:hover {
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.dot.active {
+  background-color: #0071e3;
+}
+
+.post-file-info {
+  display: flex;
+  align-items: center;
+}
+
+.post-filename {
+  color: #73787e;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 140%;
+  letter-spacing: -0.07px;
+}
+
+.notice-view-all {
+  width: 65px;
+  height: 25px;
+  gap: 10px;
+  border-radius: 4px;
+  border: 1px solid #dce2e8;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notice-view-all:hover {
+  background-color: #f8f9fa;
+}
+.schedule-modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.schedule-modal-content {
+  position: fixed;
+  width: 513px;
+  top: 188px;
+  left: 703px;
+  padding: 40px 32px;
+  border-radius: 12px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+.schedule-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 44px;
+}
+
+.schedule-modal-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.schedule-modal-title {
+  font-family: Pretendard;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 36px;
+  letter-spacing: -0.015em;
+  color: #26282b;
+  margin: 0;
+  padding-left: 8px;
+}
+
+.schedule-modal-body {
+  width: 449px;
+  height: 488px;
+  gap: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.schedule-title-input,
+.schedule-location-input {
+  width: 100%;
+  height: 48px;
+  padding: 12px 16px;
+  gap: 16px;
+  border-radius: 8px;
+  border: 1px solid #dce2e8;
+  font-family: Pretendard;
+}
+
+.schedule-time-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.schedule-time-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.schedule-label {
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 19.6px;
+  color: #26282b;
+}
+
+.schedule-time-inputs {
+  display: flex;
+  gap: 12px;
+}
+
+.schedule-date-input,
+.schedule-time-input {
+  width: 218.5px;
+  height: 48px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #dce2e8;
+  font-family: Pretendard;
+}
+
+.schedule-location-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.schedule-color-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 28px;
+}
+
+.schedule-color-options {
+  display: flex;
+  gap: 6px;
+}
+
+.color-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.color-circle.pink {
+  background: #f691b2;
+}
+.color-circle.orange {
+  background: #ffad46;
+}
+.color-circle.green {
+  background: #92e1c0;
+}
+.color-circle.blue {
+  background: #4986e7;
+}
+.color-circle.purple {
+  background: #9a9cff;
+}
+.color-circle.brown {
+  background: #ac725e;
+}
+
+.schedule-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: auto;
+}
+
+.schedule-cancel-btn {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19.09px;
+  color: #73787e;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 16px;
+}
+
+.schedule-submit-btn {
+  width: 88px;
+  height: 40px;
+  padding: 12px 16px;
+  gap: 8px;
+  border-radius: 8px;
+  background: #6a4ced;
+  border: none;
+  color: #ffffff;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19.09px;
+  cursor: pointer;
+}
+
+/* Flatpickr 시간 선택 커스텀 스타일 */
+.flatpickr-time input.flatpickr-hour.selected,
+.flatpickr-time input.flatpickr-minute.selected,
+.flatpickr-time input.flatpickr-second.selected {
+  background: #6a4ced !important;
+  color: #fff !important;
+  border-radius: 4px !important;
+}
+
+.flatpickr-time input:hover,
+.flatpickr-time .flatpickr-am-pm:hover,
+.flatpickr-time input:focus {
+  background: #f3f0ff !important;
+  border-radius: 4px !important;
+}
+
+.flatpickr-time input.flatpickr-hour,
+.flatpickr-time input.flatpickr-minute,
+.flatpickr-time input.flatpickr-second {
+  border-radius: 4px !important;
+}
+
+.time-input-wrapper {
+  position: relative;
+  width: 218.5px;
+}
+
+.time-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #91989f;
+  pointer-events: none;
+}
+
+.schedule-time-input {
+  width: 100%;
+  padding-right: 40px;
+  font-family: Pretendard;
+}
+
+/* Flatpickr 커스텀 스타일 */
+.flatpickr-input[readonly] {
+  background-color: #fff;
+  cursor: pointer;
+}
+
+/* 건의사항 섹션 스타일 */
+.suggestions-container {
+  position: relative;
+  width: 1240px;
+  padding: 20px;
+  margin: 0 210px 0 auto;
+}
+
+.suggestions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 11px;
+  width: 1240px;
+}
+
+.suggestions-description {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+
+.suggestions-bulb-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.suggestions-desc-text {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22.4px;
+  color: #91989f;
+}
+
+/* 리스트 헤더 스타일 */
+.suggestions-list-header {
+  width: 1240px;
+  height: 52px;
+  padding: 0 0 12px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #26282b;
+  gap: 12px;
+}
+
+.suggestions-total-count {
+  font-family: Pretendard;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 17.9px;
+  text-align: left;
+}
+
+.suggestions-search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.suggestions-search-input {
+  width: 240px;
+  height: 40px;
+  padding: 12px 18px;
+  padding-right: 50px;
+  border-radius: 44px;
+  border: 1px solid #e5e8eb;
+  font-family: Pretendard;
+  font-size: 14px;
+  margin-right: 50px;
+}
+
+.suggestions-search-button {
+  position: absolute;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.suggestions-search-icon {
+  width: 40px;
+  height: 40px;
+}
+
+/* 게시글 레이아웃 스타일 */
+.suggestions-post {
+  width: 1240px;
+  min-height: 87px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  border-bottom: 1px solid #e5e8eb;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.suggestions-post.expanded {
+  min-height: auto;
+}
+
+.suggestions-post-q {
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 21.48px;
+  text-align: center;
+}
+
+.suggestions-post-content {
+  width: 1116px;
+  min-height: 47px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.suggestions-post-title {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22.4px;
+  text-align: left;
+}
+
+.suggestions-post-date {
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.71px;
+  text-align: left;
+  color: #73787e;
+}
+
+.suggestions-post-body {
+  display: none;
+  margin-top: 16px;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26.4px;
+  letter-spacing: -0.02em;
+  text-align: left;
+  color: #464c52;
+}
+
+.suggestions-post.expanded .suggestions-post-body {
+  display: block;
+}
+
+.suggestions-post-icon {
+  width: 30px;
+  height: 24px;
+  transition: transform 0.3s ease;
+}
+
+/* 페이지네이션과 글쓰기 버튼 스타일은 지식공유 섹션과 동일 */
+.suggestions-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  width: 1240px;
+}
+
+.suggestions-post.expanded .suggestions-post-icon {
+  transform: rotate(180deg);
+}
+
+.suggestions-write-btn {
+  position: absolute;
+  bottom: 20px;
+  right: -20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 112px;
+  height: 36px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #f3f4f5;
+  border: 1px solid #f3f4f5;
+  cursor: pointer;
+}
+
+.suggestions-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  width: 1240px;
+}
+
+.suggestions-pagination .prev-btn,
+.suggestions-pagination .next-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0px solid #dce2e8;
+  border-radius: 8px;
+  background: #ffffff url("하단바.png") no-repeat center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.suggestions-pagination .prev-btn {
+  transform: rotate(90deg);
+}
+
+.suggestions-pagination .next-btn {
+  transform: rotate(-90deg);
+}
+
+.suggestions-pagination .prev-btn:hover,
+.suggestions-pagination .next-btn:hover {
+  background-color: #f3f4f5;
+}
+
+.suggestions-reply-section {
+  width: 1240px;
+  height: 78px;
+  padding: 19px 24px 19px 68px;
+  gap: 16px;
+  background: #f3f4f5;
+  display: none;
+  align-items: center;
+  position: relative;
+}
+
+.suggestions-post.expanded .suggestions-reply-section {
+  display: flex;
+  align-items: center;
+}
+
+.suggestions-reply-input {
+  width: calc(100% - 84px); /* 버튼 너비(60px) + 마진(12px) + 여유공간(12px) */
+  height: 40px;
+  padding: 12px 16px;
+  border: 1px solid #e5e8eb;
+  border-radius: 8px;
+  font-family: Pretendard;
+  font-size: 14px;
+  background: #ffffff;
+}
+
+.suggestions-reply-input::placeholder {
+  color: #91989f;
+}
+
+.suggestions-reply-button {
+  width: 60px;
+  height: 40px;
+  padding: 12px 16px;
+  margin-left: 20px;
+  border: none;
+  border-radius: 8px;
+  background: #363a3e;
+  color: #ffffff;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  position: absolute;
+  right: 30px;
+}
+
+.suggestions-reply-button:hover {
+  background: #4a4f54;
+}
+
+.suggestions-post-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 1240px;
+}
+
+.suggestions-replied-section {
+  width: 1240px;
+  min-height: 160px;
+  padding: 32px 24px;
+  gap: 24px;
+  background: #f3f4f5;
+  display: flex;
+  border-bottom: 1px solid #e5e8eb;
+}
+
+.suggestions-replied-a {
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 21.48px;
+  text-align: center;
+  color: #6a4ced;
+}
+
+.suggestions-replied-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.suggestions-replied-text {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26.4px;
+  letter-spacing: -0.02em;
+  text-align: left;
+  color: #464c52;
+}
+
+.suggestions-replied-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.suggestions-replied-edit,
+.suggestions-replied-delete {
+  height: 32px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 1px solid #c7ced2;
+  cursor: pointer;
+  font-family: Pretendard;
+  font-size: 14px;
+  color: #464c52;
+}
+
+.suggestions-replied-edit:hover,
+.suggestions-replied-delete:hover {
+  background: #f3f4f5;
+}
+
+.suggestions-reply-edit-button {
+  width: 60px;
+  height: 40px;
+  padding: 12px 16px;
+  margin-left: 20px;
+  border: none;
+  border-radius: 8px;
+  background: #363a3e;
+  color: #ffffff;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+}
+
+.suggestions-reply-edit-button:hover {
+  background: #4a4f54;
+}
+
+/* 검토법 검색과 시스템 검색 게시판 헤더 스타일 */
+#review-method-search .tax-board-header,
+#system-question-search .tax-board-header {
+  width: 1240px;
+  height: 46px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #26282b;
+  background: #f3f4f5;
+  margin-top: 50px;
+}
+
+#review-method-search .header-no,
+#system-question-search .header-no {
+  width: 70px;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  text-align: center;
+  color: #73787e;
+}
+
+#review-method-search .tax-board-header span,
+#system-question-search .tax-board-header span {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  color: #73787e;
+}
+
+/* 검토법 검색과 시스템 검색 게시글 스타일 */
+#review-method-search .posts .post,
+#system-question-search .posts .post {
+  width: 1240px;
+  height: 62px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e5e8eb;
+  cursor: pointer;
+}
+
+#review-method-search .posts .post:hover,
+#system-question-search .posts .post:hover {
+  background-color: #f8f9fa;
+}
+
+#review-method-search .posts .post span,
+#system-question-search .posts .post span {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+}
+
+#review-method-search .header-date,
+#system-question-search .header-date {
+  width: 120px;
+  text-align: center;
+}
+
+/* 헤더 부분 스타일 유지 */
+.knowledge-list-header {
+  display: flex;
+  padding: 16px;
+  border-bottom: 1px solid #26282b;
+  margin-bottom: 8px;
+}
+
+/* 게시글 리스트 스타일 */
+.knowledge-post {
+  display: flex;
+  padding: 16px 0;
+  border-bottom: 1px solid #e5e8eb;
+}
+
+.knowledge-post .knowledge-no {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  text-align: center;
+  color: #73787e;
+  width: 50p;
+}
+
+.knowledge-post .knowledge-title {
+  flex: 1;
+  margin: 0 32px;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  text-align: left;
+  color: #363a3e;
+}
+
+.knowledge-post .knowledge-time {
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.71px;
+  text-align: left;
+  color: #91989f;
+  width: 120px;
+  padding-left: 20px;
+}
+
+.post-detail-container {
+  width: 1030px;
+  height: auto;
+  min-height: 616px;
+  position: relative;
+  margin: 0 auto;
+  padding: 40px;
+  background: #ffffff;
+}
+
+.post-detail-header {
+  width: 1030px;
+  margin-bottom: 16px;
+}
+
+.post-detail-title {
+  font-family: Pretendard;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 39.2px;
+  letter-spacing: -0.005em;
+  text-align: left;
+  color: #26282b;
+  margin: 0;
+  padding: 0;
+}
+
+.info-label {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  color: #73787e;
+}
+
+.post-detail-info {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.info-label,
+.post-date,
+.view-count {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  color: #73787e;
+}
+
+.view-count-label {
+  margin-left: 24px;
+}
+
+.post-date {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  color: #73787e;
+}
+
+.view-count {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  color: #73787e;
+}
+.post-detail-divider {
+  width: 100%;
+  height: 1px;
+  background: #26282b;
+  margin: 40px 0 20px 0;
+}
+
+.post-detail-content {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 28.8px;
+  letter-spacing: -0.02em;
+  text-align: left;
+  color: #26282b;
+  margin-bottom: 40px;
+  margin-top: 20px;
+}
+
+.attachments-title {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 22.4px;
+  letter-spacing: -0.005em;
+  color: #363a3e;
+  margin: 0 0 12px 0;
+}
+
+.attachment-item {
+  width: 950px;
+  height: 56px;
+  padding: 16px 0;
+  background: #f3f4f5;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-right: 10px;
+}
+
+.attachment-name {
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  color: #26282b;
+  margin-left: 16px;
+}
+
+.back-to-list-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.back-to-list-btn {
+  width: 88px;
+  height: 40px;
+  gap: 8px;
+  border-radius: 8px;
+  border: 1px solid #c7ced2;
+  background: #ffffff;
+  cursor: pointer;
+
+  /* 텍스트 스타일 */
+  font-family: Pretendard;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19.09px;
+  text-align: center;
+  color: #363a3e;
+
+  /* 호버 효과 */
+  transition: all 0.2s ease;
+}
+
+.back-to-list-btn:hover {
+  background: #f3f4f5;
+}
+
+.download-icon:hover {
+  opacity: 0.8;
+}
+
+.download-icon img {
+  width: 20px;
+  height: 20px;
+  margin-right: 16px;
+}
+
+/* 기존 페이지네이션 스타일을 아래와 같이 수정 */
+.knowledge-pagination .prev-btn,
+.knowledge-pagination .next-btn,
+.notices-pagination .prev-btn,
+.notices-pagination .next-btn,
+.data-room-pagination .prev-btn,
+.data-room-pagination .next-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0px solid #dce2e8;
+  border-radius: 8px;
+  background: #ffffff url("하단바.png") no-repeat center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.knowledge-pagination .prev-btn,
+.notices-pagination .prev-btn,
+.data-room-pagination .prev-btn {
+  transform: rotate(90deg);
+}
+
+.knowledge-pagination .next-btn,
+.notices-pagination .next-btn,
+.data-room-pagination .next-btn {
+  transform: rotate(-90deg);
+}
+
+.knowledge-pagination .prev-btn:hover,
+.knowledge-pagination .next-btn:hover,
+.notices-pagination .prev-btn:hover,
+.notices-pagination .next-btn:hover,
+.data-room-pagination .prev-btn:hover,
+.data-room-pagination .next-btn:hover {
+  background-color: #f3f4f5;
+}
+
+/* FullCalendar 현재 날짜 스타일 수정 */
+.fc .fc-daygrid-day.fc-day-today {
+  background: #f5f3ff !important;
+}
+
+.fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+  color: #6a4ced !important;
+}
+
+/* FullCalendar 출퇴근 이벤트 컨테이너 스타일 */
+.fc-event-check-in .fc-event-title-container,
+.fc-event-check-out .fc-event-title-container {
+  width: 100px !important;
+  height: 20px;
+  padding: 2px 4px;
+  gap: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  flex-grow: 0 !important;
+}
+
+.fc-event-check-in .fc-event-title-container {
+  background: #00b890;
+}
+
+.fc-event-check-out .fc-event-title-container {
+  background: #f6938c;
+}
+
+/* 이벤트 전체 컨테이너 스타일 추가 */
+.fc-h-event {
+  display: flex !important;
+  justify-content: center !important;
+  background: none !important;
+  border: none !important;
+}
+
+/* 출퇴근 아이콘 스타일 */
+.fc-event-check-in .fc-event-title::before,
+.fc-event-check-out .fc-event-title::before {
+  content: "";
+  display: inline-block;
+  width: 10.67px;
+  height: 10.67px;
+  margin-right: 4px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  vertical-align: middle;
+}
+
+.fc-event-check-in .fc-event-title::before {
+  background-image: url("출근하기.png");
+}
+
+.fc-event-check-out .fc-event-title::before {
+  background-image: url("퇴근하기.png");
+}
+
+/* 출퇴근 시간 텍스트 스타일 */
+.fc-event-check-in .fc-event-title,
+.fc-event-check-out .fc-event-title {
+  font-family: Pretendard;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 14.32px;
+  letter-spacing: -0.015em;
+  text-align: left;
+  color: #ffffff;
+}
+
+/* FullCalendar 날짜 위치 조정 */
+.fc .fc-daygrid-day-top {
+  justify-content: flex-start !important;
+}
+
+.fc .fc-daygrid-day-number {
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 400;
+  color: #26282b;
 }

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Perplexity AI 챗봇</title>
+    <style>
+      body {
+        font-family: "Pretendard", sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .chat-container {
+        border: 1px solid #e5e8eb;
+        border-radius: 8px;
+        height: 600px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+      }
+
+      .message {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 8px;
+        max-width: 70%;
+      }
+
+      .user-message {
+        background: #f3f4f5;
+        margin-left: auto;
+      }
+
+      .bot-message {
+        background: #ebeff3;
+      }
+
+      .input-container {
+        display: flex;
+        padding: 20px;
+        border-top: 1px solid #e5e8eb;
+      }
+
+      .chat-input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #c7ced2;
+        border-radius: 6px;
+        margin-right: 10px;
+        font-family: "Pretendard";
+      }
+
+      .send-button {
+        padding: 10px 20px;
+        background: #363a3e;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: "Pretendard";
+      }
+
+      .send-button:hover {
+        background: #4a4f54;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chat-container">
+      <div class="chat-messages" id="chatMessages">
+        <div class="message bot-message">안녕하세요! 무엇을 도와드릴까요?</div>
+      </div>
+      <div class="input-container">
+        <input
+          type="text"
+          class="chat-input"
+          id="userInput"
+          placeholder="메시지를 입력하세요..."
+        />
+        <button class="send-button" onclick="sendMessage()">전송</button>
+      </div>
+    </div>
+
+    <script>
+      const API_KEY = "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";
+
+      async function sendMessage() {
+        const userInput = document.getElementById("userInput");
+        const chatMessages = document.getElementById("chatMessages");
+        const userMessage = userInput.value.trim();
+
+        if (!userMessage) return;
+
+        // 사용자 메시지 표시
+        chatMessages.innerHTML += `
+                <div class="message user-message">${userMessage}</div>
+            `;
+
+        // API 요청
+        try {
+          const response = await fetch(
+            "https://api.perplexity.ai/chat/completions",
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${API_KEY}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                model: "llama-3.1-sonar-large-128k-online",
+                messages: [
+                  {
+                    role: "user",
+                    content: userMessage,
+                  },
+                ],
+              }),
+            }
+          );
+
+          const data = await response.json();
+          const botResponse = data.choices[0].message.content;
+
+          // 봇 응답 표시
+          chatMessages.innerHTML += `
+                    <div class="message bot-message">${botResponse}</div>
+                `;
+
+          // 스크롤을 최하단으로 이동
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+
+          // 입력창 초기화
+          userInput.value = "";
+        } catch (error) {
+          console.error("Error:", error);
+          chatMessages.innerHTML += `
+                    <div class="message bot-message">죄송합니다. 오류가 발생했습니다.</div>
+                `;
+        }
+      }
+
+      // Enter 키로도 메시지 전송
+      document.getElementById("userInput").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          sendMessage();
+        }
+      });
+    </script>
+  </body>
+</html>
