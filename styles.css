@@ -620,7 +620,7 @@ nav ul .menu-title {
   margin-top: 10px;
 }
 
-/* 하위 메뉴 활성화 스타일 */
+/* 하위 메 활성화 스타일 */
 nav ul .submenu li a.active {
   display: flex;
   padding: 10px 20px 10px 20px;
@@ -841,7 +841,7 @@ main {
   display: flex;
 }
 
-/* 모달 컨텐츠 스일 */
+/* 모 컨텐츠 스일 */
 .modal-content {
   background: #fff;
   padding: 32px;
@@ -1766,22 +1766,40 @@ footer {
 
 .pagination button {
   padding: 8px 12px;
-  border: 1px solid #ccc;
+  border: 0px solid #ccc;
   background-color: #fff;
-  color: #333;
+  color: #363a3e;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 8px;
   transition: background-color 0.3s, color 0.3s;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.71px;
+  text-align: center;
+}
+
+/* 현재 선택된 페이지 스타일 */
+.pagination button.active,
+.pagination button:disabled {
+  background-color: #f5f3ff;
+  color: #6a4ced;
+  border-color: #f5f3ff;
+}
+
+.pagination
+  button:hover:not(.active):not(:disabled):not(.prev-btn):not(.next-btn) {
+  background-color: #f5f3ff;
 }
 
 .pagination button.active {
-  background-color: #0071e3;
-  color: #fff;
-  border-color: #0071e3;
+  background-color: #f5f3ff;
+  color: #6a4ced;
+  border-color: #f5f3ff;
 }
 
 .pagination button:hover:not(.active) {
-  background-color: #f0f0f0;
+  background-color: #f5f3ff;
 }
 
 /* Keyword Search Button */
@@ -3725,6 +3743,7 @@ header {
   padding: 12px;
   border-radius: 12px;
   background: #ffffff;
+  border: 1px solid #dce2e8;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -3736,7 +3755,7 @@ header {
 }
 
 .welcomecalendar .fc-header-toolbar {
-  margin-bottom: 0.5em !important;
+  margin-bottom: 0em !important;
 }
 
 .welcomecalendar .fc-daygrid-body {
@@ -4204,6 +4223,61 @@ header {
 }
 
 .welcome-calendar .fc-daygrid-day-frame {
+  height: 100% !important;
+}
+
+.welcomecalendar .fc .fc-toolbar {
+  margin-bottom: 1em !important;
+}
+
+.welcomecalendar .fc {
+  width: 100%;
+  height: 100%;
+}
+
+.welcomecalendar .fc .fc-button-group {
+  width: 64px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  overflow: hidden;
+  margin-right: 8px !important;
+}
+
+.welcomecalendar .fc-prev-button,
+.welcomecalendar .fc-next-button {
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  background: #ffffff !important;
+  border: none !important;
+  color: #464c52 !important;
+}
+
+.welcomecalendar .fc-button-group {
+  height: 32px !important;
+}
+
+.welcomecalendar .fc-today-button {
+  width: 50px !important;
+  height: 32px !important;
+  padding: 6px 10px !important;
+  border-radius: 8px !important;
+  border: 1px solid #dce2e8 !important;
+  background: transparent !important;
+  font-family: Pretendard !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 16.71px !important;
+  color: #26282b !important;
+}
+
+.welcomecalendar .fc-daygrid-day {
+  height: 25px !important; /* 기존 35px에서 25px로 변경 */
+}
+
+.welcomecalendar .fc-daygrid-day-frame {
   height: 100% !important;
 }
 
@@ -4777,7 +4851,7 @@ header {
 .notices-pagination button,
 .data-room-pagination button {
   padding: 8px 12px;
-  border: 1px solid #e5e8eb;
+  border: 0px solid #e5e8eb;
   background: none;
   cursor: pointer;
 }
@@ -5315,7 +5389,7 @@ header {
   transition: transform 0.3s ease;
 }
 
-/* 페이지네이션과 글쓰기 버튼 스타일은 지식공유 섹션과 동일 */
+/* ��이지네이션과 글쓰기 버튼 스타일은 지식공유 섹션과 동일 */
 .suggestions-pagination {
   display: flex;
   justify-content: center;
@@ -5829,13 +5903,25 @@ header {
   transform: rotate(-90deg);
 }
 
-.knowledge-pagination .prev-btn:hover,
-.knowledge-pagination .next-btn:hover,
-.notices-pagination .prev-btn:hover,
-.notices-pagination .next-btn:hover,
-.data-room-pagination .prev-btn:hover,
-.data-room-pagination .next-btn:hover {
+.knowledge-pagination .prev-btn:not(:disabled):hover,
+.knowledge-pagination .next-btn:not(:disabled):hover,
+.notices-pagination .prev-btn:not(:disabled):hover,
+.notices-pagination .next-btn:not(:disabled):hover,
+.data-room-pagination .prev-btn:not(:disabled):hover,
+.data-room-pagination .next-btn:not(:disabled):hover {
   background-color: #f3f4f5;
+}
+
+/* disabled 상태일 때의 스타일 */
+.knowledge-pagination .prev-btn:disabled,
+.knowledge-pagination .next-btn:disabled,
+.notices-pagination .prev-btn:disabled,
+.notices-pagination .next-btn:disabled,
+.data-room-pagination .prev-btn:disabled,
+.data-room-pagination .next-btn:disabled {
+  background-color: #ffffff;
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 /* FullCalendar 현재 날짜 스타일 수정 */
@@ -5914,7 +6000,11 @@ header {
 
 /* FullCalendar 날짜 위치 조정 */
 .fc .fc-daygrid-day-top {
+  display: flex !important;
+  flex-direction: row !important;
   justify-content: flex-start !important;
+  align-items: center !important;
+  padding: 4px !important;
 }
 
 .fc .fc-daygrid-day-number {
@@ -5922,4 +6012,177 @@ header {
   font-size: 14px;
   font-weight: 400;
   color: #26282b;
+  position: static !important;
+  padding: 0 !important;
+  margin-left: 4px !important; /* 추가 좌측 여백 */
+}
+
+/* 선택된 색상 표시 */
+.color-circle.selected {
+  border: 2px solid #000;
+  transform: scale(1.2);
+}
+
+/* 툴팁 스타일 */
+.tooltip {
+  position: absolute;
+  z-index: 1070;
+  display: block;
+  margin: 0;
+  font-family: Pretendard;
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+  white-space: pre-line;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.tooltip.show {
+  opacity: 1;
+}
+
+/* 이벤트 색상 블록 스타일 */
+.event-color-block {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin: 0 1px !important;
+}
+
+/* 커스텀 툴팁 스타일 수정 */
+.custom-event-tooltip {
+  position: absolute;
+  width: 238px;
+  padding: 16px 12px;
+  background: white;
+  border-radius: 8px; /* 모든 면에 border-radius 적용 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tooltip-date-header {
+  font-family: Pretendard;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 14.32px;
+  letter-spacing: -0.015em;
+  text-align: left;
+  color: #91989f;
+  margin-bottom: 8px;
+}
+
+.tooltip-event-row {
+  width: 214px;
+  height: 17px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tooltip-color-block {
+  width: 4px;
+  height: 16px;
+  border-radius: 13px;
+  transform: rotate(-180deg);
+}
+
+.tooltip-event-title {
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.71px;
+  text-align: left;
+  color: #363a3e;
+  flex-grow: 1;
+  margin-left: 0.5px;
+}
+
+.tooltip-event-details {
+  font-family: Pretendard;
+  font-size: 13px; /* 14px에서 13px로 감소 */
+  font-weight: 500;
+  line-height: 16.71px;
+  text-align: left;
+  color: #91989f; /* #363a3e에서 #91989F로 변경 */
+  white-space: nowrap;
+}
+
+/* FullCalendar 이벤트 컨테이너 수정 */
+.fc-daygrid-event-harness {
+  display: inline-block;
+  margin: 0 !important; /* 이벤트 블록 간 간격 */
+}
+
+.fc-h-event {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* 이벤트 컨테이너 정렬 */
+.fc-daygrid-day-events {
+  position: static !important;
+  min-height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* FullCalendar 날짜 셀 스타일 수정 */
+.welcomecalendar .fc-daygrid-day-top {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  padding: 4px !important;
+}
+
+.welcomecalendar .fc-daygrid-day-number {
+  position: static !important;
+  padding: 0 !important;
+  margin-right: 4px !important;
+}
+
+.fc-daygrid-day {
+  height: 58px !important;
+  min-height: 58px !important;
+  max-height: 58px !important;
+}
+
+.fc-daygrid-day-frame {
+  height: 58px !important;
+  min-height: 58px !important;
+  max-height: 58px !important;
+}
+
+.fc-daygrid-day-events {
+  margin-top: 0 !important;
+  padding: 0 !important;
+}
+
+.fc-daygrid-day-top {
+  padding-top: 2px !important;
+}
+
+.welcomecalendar .fc-daygrid-event-harness {
+  display: inline-block !important;
+  margin: 0 !important;
+}
+
+.welcomecalendar .fc-daygrid-day-events {
+  position: static !important;
+  min-height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
 }

@@ -32,6 +32,12 @@ function initializeAttendanceCalendar() {
       dayHeaderFormat: {
         weekday: "short",
       },
+      dayCellContent: function (info) {
+        const number = document.createElement("div");
+        number.classList.add("fc-daygrid-day-number");
+        number.textContent = info.dayNumberText.replace("일", "");
+        return { domNodes: [number] };
+      },
       viewDidMount: function (arg) {
         const titleEl = document.querySelector(".fc-toolbar-title");
         if (titleEl) {
@@ -291,7 +297,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
-
 // 출석 데이터 초기화
 let attendanceData = {
   checkIns: {},

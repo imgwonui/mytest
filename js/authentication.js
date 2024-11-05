@@ -116,11 +116,10 @@ function setPage(sectionId, page) {
   savePaginationData(currentPaginationData);
 }
 
-// 로그인 화면에서 메인 콘텐츠로 전환
 function showMainContent() {
   document.getElementById("login-screen").style.display = "none";
   document.getElementById("main-content").style.display = "flex";
-  document.querySelector("header").style.display = "flex"; // header 표시
+  document.querySelector("header").style.display = "flex";
 
   // 모든 섹션 숨기기
   document.querySelectorAll(".section").forEach((section) => {
@@ -135,10 +134,13 @@ function showMainContent() {
     welcomeSection.classList.add("active");
   }
 
-  // URL 해시 초기화 (pushState 대신 replaceState 사용)
+  // URL 해시 초기화
   history.replaceState(null, "", "#welcome");
-}
 
+  // welcome 섹션 초기화
+  initializeWelcomeCalendar();
+  renderDashboardUpdates();
+}
 // 로그아웃 기능
 function setupLogoutHandling() {
   const logoutBtn = document.querySelector(".logout-btn");

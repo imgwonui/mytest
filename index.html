@@ -49,6 +49,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
     <script src="js/home.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tooltip.js"></script>
   </head>
   <body>
     <!-- Login Screen -->
@@ -150,7 +152,7 @@
           class="menu-item"
           data-section="review-method-search"
         >
-          <img src="검토법검색.png" alt="검토법검색 아이콘" />
+          <img src="검토법검색2.png" alt="검토법검색 아이콘" />
           <span>검토법 검색</span>
         </a>
         <a
@@ -164,7 +166,7 @@
 
         <div class="menu-category">근태관리</div>
         <a href="#attendance" class="menu-item" data-section="attendance">
-          <img src="출근도장.png" alt="출근도장 아���콘" />
+          <img src="출근도장.png" alt="출근도장 아이콘" />
           <span>출근 도장</span>
         </a>
         <a
@@ -424,7 +426,7 @@
 
             <div class="notices-list-header">
               <span class="notices-no">NO</span>
-              <span class="notices-title">제목</span>
+              <span class="notices-title">���목</span>
               <span class="notices-time">작성시간</span>
             </div>
 
@@ -474,6 +476,22 @@
               <button id="backToListBtn" class="back-to-list-btn">
                 목록으로
               </button>
+            </div>
+            <!-- 댓글 섹션 추가 -->
+            <div class="post-divider"></div>
+            <div class="comments-section">
+              <h3>댓글</h3>
+              <div class="modal-comments-list">
+                <!-- 댓글은 JavaScript로 동적 추가됨 -->
+              </div>
+              <div class="comment-input-section">
+                <input
+                  type="text"
+                  class="comment-input"
+                  placeholder="댓글을 입력해주세요."
+                />
+                <button type="button" class="comment-submit-btn">등록</button>
+              </div>
             </div>
           </div>
         </div>
@@ -1049,7 +1067,7 @@
             <label class="leave-form-label">휴가 유형</label>
             <select id="leave-type" class="leave-form-input">
               <option value="" disabled selected>
-                휴가 유형을 선택해주��요.
+                휴가 유형을 선택해주세요.
               </option>
               <option value="morning">반차(오전)</option>
               <option value="afternoon">반차(오후)</option>

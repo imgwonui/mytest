@@ -14,13 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
       selectedTag = null;
       taxTags.forEach((tag) => tag.classList.remove("selected"));
     }
-
-    // 자료실 선택 시 파일 업로드 필드 표시
-    if (e.target.value === "data-room") {
-      document.getElementById("post-file").style.display = "block";
-    } else {
-      document.getElementById("post-file").style.display = "none";
-    }
   });
 
   // 태그 선택 이벤트

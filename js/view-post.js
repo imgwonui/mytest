@@ -75,3 +75,22 @@ function loadPostDetails() {
 
 // 페이지 로드 시 게시글 상세 정보 로드
 document.addEventListener("DOMContentLoaded", loadPostDetails);
+
+function createAttachmentElement(fileName) {
+  const attachmentDiv = document.createElement("div");
+  attachmentDiv.className = "attachment-item";
+
+  const fileNameSpan = document.createElement("span");
+  fileNameSpan.className = "attachment-name";
+  fileNameSpan.textContent = fileName;
+
+  const downloadIcon = document.createElement("img");
+  downloadIcon.className = "download-icon";
+  downloadIcon.src = "downloadicon.png";
+  downloadIcon.alt = "다운로드";
+
+  attachmentDiv.appendChild(fileNameSpan);
+  attachmentDiv.appendChild(downloadIcon);
+
+  return attachmentDiv;
+}

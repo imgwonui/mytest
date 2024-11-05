@@ -324,3 +324,301 @@ document.addEventListener("DOMContentLoaded", function () {
     searchResultsModal.style.display = "flex";
   }
 });
+
+// 지식공유 검색 기능 설정
+function setupKnowledgeSearchFunctionality() {
+  const knowledgeSearchButton = document.querySelector(
+    ".knowledge-search-button"
+  );
+  const knowledgeSearchInput = document.querySelector(
+    ".knowledge-search-input"
+  );
+
+  if (knowledgeSearchButton && knowledgeSearchInput) {
+    knowledgeSearchButton.addEventListener("click", () => {
+      performKnowledgeSearch();
+    });
+
+    knowledgeSearchInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        performKnowledgeSearch();
+      }
+    });
+  }
+}
+
+// 지식공유 검색 수행
+function performKnowledgeSearch() {
+  const searchInput = document.querySelector(".knowledge-search-input");
+  const query = searchInput.value.trim().toLowerCase();
+
+  if (query === "") {
+    alert("검색어를 입력해주세요.");
+    return;
+  }
+
+  // knowledge-sharing 데이터가 없으면 초기화
+  if (!postsData["knowledge-sharing"]) {
+    postsData["knowledge-sharing"] = [];
+  }
+
+  const results = postsData["knowledge-sharing"].filter(
+    (post) =>
+      post.title.toLowerCase().includes(query) ||
+      post.content.toLowerCase().includes(query)
+  );
+
+  renderKnowledgeSearchResults(results);
+}
+
+// 지식공유 검색 결과 렌더링
+function renderKnowledgeSearchResults(results) {
+  const postsContainer = document.querySelector(".knowledge-posts");
+  if (!postsContainer) return;
+
+  postsContainer.innerHTML = "";
+
+  if (results.length === 0) {
+    const emptyMessage = document.createElement("p");
+    emptyMessage.className = "empty-results";
+    emptyMessage.textContent = "검색 결과가 없습니다.";
+    emptyMessage.style.textAlign = "center";
+    emptyMessage.style.marginTop = "20px";
+    postsContainer.appendChild(emptyMessage);
+    return;
+  }
+
+  results.forEach((post, index) => {
+    const postElement = document.createElement("div");
+    postElement.className = "knowledge-post";
+
+    postElement.innerHTML = `
+      <span class="knowledge-no">${results.length - index}</span>
+      <span class="knowledge-title">${post.title}</span>
+      <span class="knowledge-time">${new Date(
+        post.timestamp
+      ).toLocaleDateString()}</span>
+    `;
+
+    postElement.addEventListener("click", () => {
+      showPost({
+        ...post,
+        board: "knowledge-sharing",
+      });
+    });
+
+    postsContainer.appendChild(postElement);
+  });
+}
+
+// 공지사항 검색 기능 설정
+function setupNoticesSearchFunctionality() {
+  const searchInput = document.querySelector(".notices-search-input");
+  const searchButton = document.querySelector(".notices-search-button");
+
+  if (searchInput && searchButton) {
+    const performSearch = () => {
+      const query = searchInput.value.trim().toLowerCase();
+      const postsData = JSON.parse(localStorage.getItem("postsData")) || {};
+      const noticesPosts = postsData["notices"] || [];
+
+      // 검색 결과 필터링
+      const searchResults = noticesPosts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(query) ||
+          post.content.toLowerCase().includes(query)
+      );
+
+      // 검색 결과 렌더링
+      const postsContainer = document.querySelector(".notices-posts");
+      if (postsContainer) {
+        postsContainer.innerHTML = "";
+
+        if (searchResults.length === 0) {
+          postsContainer.innerHTML = `
+            <div class="no-results">
+              검색 결과가 없습니다.
+            </div>
+          `;
+          return;
+        }
+
+        searchResults.forEach((post, index) => {
+          const postElement = document.createElement("div");
+          postElement.className = "notices-post";
+          postElement.innerHTML = `
+            <span class="notices-no">${searchResults.length - index}</span>
+            <span class="notices-title">${post.title}</span>
+            <span class="notices-time">${new Date(
+              post.timestamp
+            ).toLocaleDateString()}</span>
+          `;
+
+          postElement.addEventListener("click", () => {
+            showPost({
+              ...post,
+              board: "notices",
+            });
+          });
+
+          postsContainer.appendChild(postElement);
+        });
+      }
+    };
+
+    searchButton.addEventListener("click", performSearch);
+    searchInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        performSearch();
+      }
+    });
+  }
+}
+
+// 자료실 검색 기능 설정
+function setupDataRoomSearchFunctionality() {
+  const searchInput = document.querySelector(".data-room-search-input");
+  const searchButton = document.querySelector(".data-room-search-button");
+
+  if (searchInput && searchButton) {
+    const performSearch = () => {
+      const query = searchInput.value.trim().toLowerCase();
+      const postsData = JSON.parse(localStorage.getItem("postsData")) || {};
+      const dataRoomPosts = postsData["data-room"] || [];
+
+      // 검색 결과 필터링
+      const searchResults = dataRoomPosts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(query) ||
+          post.content.toLowerCase().includes(query)
+      );
+
+      // 검색 결과 렌더링
+      const postsContainer = document.querySelector(".data-room-posts");
+      if (postsContainer) {
+        postsContainer.innerHTML = "";
+
+        if (searchResults.length === 0) {
+          postsContainer.innerHTML = `
+            <div class="no-results">
+              검색 결과가 없습니다.
+            </div>
+          `;
+          return;
+        }
+
+        searchResults.forEach((post, index) => {
+          const postElement = document.createElement("div");
+          postElement.className = "data-room-post";
+          postElement.innerHTML = `
+            <span class="data-room-no">${searchResults.length - index}</span>
+            <span class="data-room-title">${post.title}</span>
+            <span class="data-room-time">${new Date(
+              post.timestamp
+            ).toLocaleDateString()}</span>
+          `;
+
+          postElement.addEventListener("click", () => {
+            showPost({
+              ...post,
+              board: "data-room",
+            });
+          });
+
+          postsContainer.appendChild(postElement);
+        });
+      }
+    };
+
+    searchButton.addEventListener("click", performSearch);
+    searchInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        performSearch();
+      }
+    });
+  }
+}
+
+// 건의사항 검색 기능 설정
+function setupSuggestionsSearchFunctionality() {
+  const searchInput = document.querySelector(".suggestions-search-input");
+  const searchButton = document.querySelector(".suggestions-search-button");
+
+  if (searchInput && searchButton) {
+    const performSearch = () => {
+      const query = searchInput.value.trim().toLowerCase();
+
+      if (query === "") {
+        alert("검색어를 입력해주세요.");
+        return;
+      }
+
+      const postsData = JSON.parse(localStorage.getItem("postsData")) || {};
+      const suggestionsPosts = postsData["suggestions"] || [];
+
+      // 검색 결과 필터링
+      const searchResults = suggestionsPosts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(query) ||
+          post.content.toLowerCase().includes(query)
+      );
+
+      // 검색 결과 렌더링
+      renderSuggestionsSearchResults(searchResults);
+    };
+
+    searchButton.addEventListener("click", performSearch);
+    searchInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        performSearch();
+      }
+    });
+  }
+}
+
+// 건의사항 검색 결과 렌더링
+function renderSuggestionsSearchResults(results) {
+  const postsContainer = document.querySelector(".suggestions-posts");
+  if (!postsContainer) return;
+
+  postsContainer.innerHTML = "";
+
+  if (results.length === 0) {
+    const emptyMessage = document.createElement("div");
+    emptyMessage.className = "no-results";
+    emptyMessage.textContent = "검색 결과가 없습니다.";
+    emptyMessage.style.textAlign = "center";
+    emptyMessage.style.marginTop = "20px";
+    postsContainer.appendChild(emptyMessage);
+    return;
+  }
+
+  results.forEach((post) => {
+    const postElement = document.createElement("div");
+    postElement.className = "suggestions-post";
+
+    postElement.innerHTML = `
+      <span class="suggestions-post-q">Q</span>
+      <div class="suggestions-post-content">
+        <div class="suggestions-post-title">${post.title}</div>
+        <div class="suggestions-post-date">${post.date}</div>
+      </div>
+      <img src="하단바.png" alt="더보기" class="suggestions-post-icon">
+    `;
+
+    postElement.addEventListener("click", () => {
+      showPost({
+        ...post,
+        board: "suggestions",
+      });
+    });
+
+    postsContainer.appendChild(postElement);
+  });
+
+  // 검색 결과 수 업데이트
+  const countElement = document.getElementById("suggestions-count");
+  if (countElement) {
+    countElement.textContent = results.length;
+  }
+}

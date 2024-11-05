@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitBtn = document.querySelector(".submit-btn");
   const cancelBtn = document.querySelector(".cancel-btn");
   const writePostButtons = document.querySelectorAll(".tax-write-post-btn");
+  const knowledgeWriteBtn = document.querySelector(".knowledge-write-btn");
 
   // 휴가 신청 모달 관련 함수들
   function openLeaveModal() {
@@ -131,15 +132,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 게시판 선택 시 태그 섹션 표시/숨김 처리
+  // 게시판 선택 시 태그 섹션과 파일 업로드 필드 표시/숨김 처리
   if (boardSelect) {
     boardSelect.addEventListener("change", (e) => {
-      // tax-question-search, knowledge-sharing, notices일 때 태그 섹션 표시
-      if (
-        e.target.value === "tax-question-search" ||
-        e.target.value === "knowledge-sharing" ||
-        e.target.value === "notices"
-      ) {
+      // 태그 섹션 표시/숨김
+      if (e.target.value === "tax-question-search") {
         tagSection.style.display = "flex";
       } else {
         tagSection.style.display = "none";
@@ -149,6 +146,18 @@ document.addEventListener("DOMContentLoaded", () => {
           btn.style.color = "";
           btn.style.borderColor = "";
         });
+      }
+
+      // 파일 업로드 필드 표시/숨김
+      const fileUploadRow =
+        document.querySelector(".file-upload").parentElement;
+      if (fileUploadRow) {
+        if (e.target.value === "data-room") {
+          fileUploadRow.style.display = "block";
+          tagSection.style.display = "none"; // 자료실에서는 태그 섹션 숨김
+        } else {
+          fileUploadRow.style.display = "none";
+        }
       }
     });
   }
@@ -187,8 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (
         (selectedBoard === "tax-question-search" ||
-          selectedBoard === "knowledge-sharing" ||
-          selectedBoard === "notices") &&
+          selectedBoard === "knowledge-sharing") &&
         !selectedTag
       ) {
         alert("태그를 선택해주세요.");
@@ -200,12 +208,16 @@ document.addEventListener("DOMContentLoaded", () => {
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
+          const fileData = {
+            name: file.name, // 파일 이름 저장
+            data: e.target.result,
+          };
           const post = createPost(
             title,
             content,
             selectedBoard,
             selectedTag,
-            e.target.result
+            fileData // 파일 데이터와 이름을 함께 저장
           );
           savePost(post);
         };
@@ -231,9 +243,37 @@ document.addEventListener("DOMContentLoaded", () => {
       closeLeaveModal();
     });
   }
+
+  // 지식공유 작성 버튼 이벤트 리스너
+  if (knowledgeWriteBtn) {
+    knowledgeWriteBtn.addEventListener("click", () => {
+      // 모든 섹션 숨기기
+      document.querySelectorAll(".section").forEach((section) => {
+        section.style.display = "none";
+      });
+
+      // 게시글 작성 폼 표시
+      const writePostSection = document.getElementById("write-post-section");
+      if (writePostSection) {
+        writePostSection.style.display = "block";
+      }
+
+      // 게시판 선택을 지식공유로 자동 설정
+      const boardSelect = document.getElementById("board-select");
+      if (boardSelect) {
+        boardSelect.value = "knowledge-sharing";
+
+        // 태그 섹션 표시
+        const tagSection = document.getElementById("tag-section");
+        if (tagSection) {
+          tagSection.style.display = "flex";
+        }
+      }
+    });
+  }
 });
 
-// 게시글 생성 함수
+// 게���글 생성 함수
 function createPost(title, content, board, tag, file = null) {
   const now = new Date();
   return {
@@ -241,7 +281,12 @@ function createPost(title, content, board, tag, file = null) {
     content,
     board,
     tag,
-    file,
+    file: file
+      ? {
+          name: file.name,
+          data: file.data,
+        }
+      : null,
     timestamp: now.getTime(),
     date: now.toISOString().split("T")[0],
     comments: [],
@@ -250,13 +295,16 @@ function createPost(title, content, board, tag, file = null) {
 
 // 게시글 저장 함수
 function savePost(post) {
-  // 게시글 저장 로직 (예: 로컬 스토리지에 저장)
-  let postsData = JSON.parse(localStorage.getItem("postsData")) || {};
+  let postsData = loadPostsData();
+
+  // 해당 게시판이 없으면 초기화
   if (!postsData[post.board]) {
     postsData[post.board] = [];
   }
+
+  // 게시글 저장
   postsData[post.board].push(post);
-  localStorage.setItem("postsData", JSON.stringify(postsData));
+  savePostsData(postsData);
 
   alert("게시글이 등록되었습니다.");
 
@@ -267,6 +315,100 @@ function savePost(post) {
   }
 
   // URL 해시 업데이트 및 페이지 새로고침
-  window.location.href = "index.html#" + post.board;
-  window.location.reload(); // 페이지 새로고침 추가
+  window.location.href = "index.html#knowledge-sharing";
+  window.location.reload();
+}
+
+// 공지사항 작성 버튼 이벤트 리스너
+const noticesWriteBtn = document.querySelector(".notices-write-btn");
+if (noticesWriteBtn) {
+  noticesWriteBtn.addEventListener("click", () => {
+    // 모든 섹션 숨기기
+    document.querySelectorAll(".section").forEach((section) => {
+      section.style.display = "none";
+    });
+
+    // 게시글 작성 폼 표시
+    const writePostSection = document.getElementById("write-post-section");
+    if (writePostSection) {
+      writePostSection.style.display = "block";
+    }
+
+    // 게시판 선택을 공지사항으로 자동 설정
+    const boardSelect = document.getElementById("board-select");
+    if (boardSelect) {
+      boardSelect.value = "notices";
+
+      // 태그 섹션 숨기기
+      const tagSection = document.getElementById("tag-section");
+      if (tagSection) {
+        tagSection.style.display = "none";
+      }
+    }
+  });
+}
+
+// 자료실 작성 버튼 이벤트 리스너
+const dataRoomWriteBtn = document.querySelector(".data-room-write-btn");
+if (dataRoomWriteBtn) {
+  dataRoomWriteBtn.addEventListener("click", () => {
+    // 모든 섹션 숨기기
+    document.querySelectorAll(".section").forEach((section) => {
+      section.style.display = "none";
+    });
+
+    // 게시글 작성 폼 표시
+    const writePostSection = document.getElementById("write-post-section");
+    if (writePostSection) {
+      writePostSection.style.display = "block";
+    }
+
+    // 게시판 선택을 자료실로 자동 설정
+    const boardSelect = document.getElementById("board-select");
+    if (boardSelect) {
+      boardSelect.value = "data-room";
+
+      // 태그 섹션 숨기기
+      const tagSection = document.getElementById("tag-section");
+      if (tagSection) {
+        tagSection.style.display = "none";
+      }
+
+      // 파일 업로드 필드 표시
+      const fileUploadRow =
+        document.querySelector(".file-upload").parentElement;
+      if (fileUploadRow) {
+        fileUploadRow.style.display = "block";
+      }
+    }
+  });
+}
+
+// 건의사항 작성 버튼 이벤트 리스너
+const suggestionsWriteBtn = document.querySelector(".suggestions-write-btn");
+if (suggestionsWriteBtn) {
+  suggestionsWriteBtn.addEventListener("click", () => {
+    // 모든 섹션 숨기기
+    document.querySelectorAll(".section").forEach((section) => {
+      section.style.display = "none";
+    });
+
+    // 게시글 작성 폼 표시
+    const writePostSection = document.getElementById("write-post-section");
+    if (writePostSection) {
+      writePostSection.style.display = "block";
+    }
+
+    // 게시판 선택을 건의사항으로 자동 설정
+    const boardSelect = document.getElementById("board-select");
+    if (boardSelect) {
+      boardSelect.value = "suggestions";
+
+      // 태그 섹션 숨기기
+      const tagSection = document.getElementById("tag-section");
+      if (tagSection) {
+        tagSection.style.display = "none";
+      }
+    }
+  });
 }

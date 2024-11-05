@@ -121,3 +121,29 @@ function savePaginationData(data) {
 
 // 전역 변수 초기화
 // 중복 선언된 selectedTaxTag 제거
+
+// 전역 데이터 저장소
+window.postsData = {
+  notices: [],
+  "tax-question-search": [],
+  "system-question-search": [],
+  "review-method-search": [],
+  "knowledge-sharing": [],
+  "data-room": [],
+  "leave-applications": [],
+  "meeting-room-applications": [],
+  suggestions: [],
+};
+
+// 기본 게시물 데이터 구조
+window.defaultPostsData = {
+  notices: [],
+  "tax-question-search": [],
+  "system-question-search": [],
+  "review-method-search": [],
+  "knowledge-sharing": [],
+  "data-room": [],
+  "leave-applications": [],
+  "meeting-room-applications": [],
+  suggestions: [],
+};
